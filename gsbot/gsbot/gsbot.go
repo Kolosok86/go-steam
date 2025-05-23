@@ -32,8 +32,7 @@ func main() {
 	}
 
 	details := &steam.LogOnDetails{
-		Username:               os.Args[1],
-		ShouldRememberPassword: true,
+		Username: os.Args[1],
 	}
 
 	for i := 2; i < len(os.Args)-1; i += 2 {

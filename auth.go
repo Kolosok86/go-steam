@@ -31,16 +31,15 @@ type LogOnDetails struct {
 	// If you have a Steam Guard mobile two-factor authentication code, you can provide it here.
 	TwoFactorCode  string
 	SentryFileHash SentryHash
-	LoginKey       string
-
-	// true if you want to get a login key which can be used in lieu of
-	// a password for subsequent logins. false or omitted otherwise.
-	ShouldRememberPassword bool
+	RefreshToken   string
+	SteamID        *steamid.SteamId
 }
 
 // Log on with the given details. You must always specify username and
 // password OR username and loginkey. For the first login, don't set an authcode or a hash and you'll
-//  receive an error (EResult_AccountLogonDenied)
+//
+//	receive an error (EResult_AccountLogonDenied)
+//
 // and Steam will send you an authcode. Then you have to login again, this time with the authcode.
 // Shortly after logging in, you'll receive a MachineAuthUpdateEvent with a hash which allows
 // you to login without using an authcode in the future.
@@ -53,8 +52,8 @@ func (a *Auth) LogOn(details *LogOnDetails) {
 	if details.Username == "" {
 		panic("Username must be set!")
 	}
-	if details.Password == "" && details.LoginKey == "" {
-		panic("Password or LoginKey must be set!")
+	if details.Password == "" {
+		panic("Password must be set!")
 	}
 
 	logon := new(protobuf.CMsgClientLogon)
@@ -68,13 +67,9 @@ func (a *Auth) LogOn(details *LogOnDetails) {
 	}
 	logon.ClientLanguage = proto.String("english")
 	logon.ProtocolVersion = proto.Uint32(steamlang.MsgClientLogon_CurrentProtocol)
-	logon.ShaSentryfile = details.SentryFileHash
-	if details.LoginKey != "" {
-		logon.LoginKey = proto.String(details.LoginKey)
-	}
-	if details.ShouldRememberPassword {
-		logon.ShouldRememberPassword = proto.Bool(details.ShouldRememberPassword)
-	}
+	logon.ClientOsType = proto.Uint32(20)
+	logon.ChatMode = proto.Uint32(2)
+	logon.ShouldRememberPassword = proto.Bool(false)
 
 	atomic.StoreUint64(&a.client.steamId, uint64(steamid.NewIdAdv(0, 1, int32(steamlang.EUniverse_Public), int32(steamlang.EAccountType_Individual))))
 

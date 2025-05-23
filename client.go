@@ -78,9 +78,6 @@ func NewClient() *Client {
 	client.Notifications = newNotifications(client)
 	client.RegisterPacketHandler(client.Notifications)
 
-	client.Trading = &Trading{client: client}
-	client.RegisterPacketHandler(client.Trading)
-
 	client.GC = newGC(client)
 	client.RegisterPacketHandler(client.GC)
 
