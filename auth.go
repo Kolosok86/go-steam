@@ -105,15 +105,14 @@ func (a *Auth) handleLogOnResponse(packet *protocol.Packet) {
 	if result == steamlang.EResult_OK {
 		atomic.StoreInt32(&a.client.sessionId, msg.Header.Proto.GetClientSessionid())
 		atomic.StoreUint64(&a.client.steamId, msg.Header.Proto.GetSteamid())
-		a.client.Web.webLoginKey = *body.WebapiAuthenticateUserNonce
 
-		go a.client.heartbeatLoop(time.Duration(body.GetOutOfGameHeartbeatSeconds()))
+		go a.client.heartbeatLoop(time.Duration(body.GetHeartbeatSeconds()))
 
 		a.client.Emit(&LoggedOnEvent{
 			Result:                    steamlang.EResult(body.GetEresult()),
 			ExtendedResult:            steamlang.EResult(body.GetEresultExtended()),
-			OutOfGameSecsPerHeartbeat: body.GetOutOfGameHeartbeatSeconds(),
-			InGameSecsPerHeartbeat:    body.GetInGameHeartbeatSeconds(),
+			OutOfGameSecsPerHeartbeat: body.GetHeartbeatSeconds(),
+			InGameSecsPerHeartbeat:    body.GetHeartbeatSeconds(),
 			PublicIp:                  body.GetDeprecatedPublicIp(),
 			ServerTime:                body.GetRtime32ServerTime(),
 			AccountFlags:              steamlang.EAccountFlags(body.GetAccountFlags()),
@@ -123,7 +122,6 @@ func (a *Auth) handleLogOnResponse(packet *protocol.Packet) {
 			CellIdPingThreshold:       body.GetCellIdPingThreshold(),
 			Steam2Ticket:              body.GetSteam2Ticket(),
 			UsePics:                   body.GetDeprecatedUsePics(),
-			WebApiUserNonce:           body.GetWebapiAuthenticateUserNonce(),
 			IpCountryCode:             body.GetIpCountryCode(),
 			VanityUrl:                 body.GetVanityUrl(),
 			NumLoginFailuresToMigrate: body.GetCountLoginfailuresToMigrate(),
