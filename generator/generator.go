@@ -144,7 +144,6 @@ var csProtoFiles = map[string]string{
 	"netmessages.proto":            "net.pb.go",
 	"network_connection.proto":     "networkconnection.pb.go",
 	"networkbasetypes.proto":       "networkbasetypes.pb.go",
-	"steammessages.proto":          "steam.pb.go",
 	"uifontfile_format.proto":      "uifontfile.pb.go",
 }
 
