@@ -3,7 +3,6 @@ package steam
 import (
 	"crypto/aes"
 	"crypto/rand"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -15,7 +14,6 @@ import (
 	"github.com/kolosok86/go-steam/protocol"
 	"github.com/kolosok86/go-steam/protocol/protobuf"
 	"github.com/kolosok86/go-steam/protocol/steamlang"
-	"google.golang.org/protobuf/proto"
 )
 
 type Web struct {
@@ -41,8 +39,6 @@ type Web struct {
 
 func (w *Web) HandlePacket(packet *protocol.Packet) {
 	switch packet.EMsg {
-	case steamlang.EMsg_ClientNewLoginKey:
-		w.handleNewLoginKey(packet)
 	case steamlang.EMsg_ClientRequestWebAPIAuthenticateUserNonceResponse:
 		w.handleAuthNonceResponse(packet)
 	}
@@ -114,20 +110,6 @@ func (w *Web) apiLogOn() error {
 
 	w.client.Emit(new(WebLoggedOnEvent))
 	return nil
-}
-
-func (w *Web) handleNewLoginKey(packet *protocol.Packet) {
-	msg := new(protobuf.CMsgClientNewLoginKey)
-	packet.ReadProtoMsg(msg)
-
-	w.client.Write(protocol.NewClientMsgProtobuf(steamlang.EMsg_ClientNewLoginKeyAccepted, &protobuf.CMsgClientNewLoginKeyAccepted{
-		UniqueId: proto.Uint32(msg.GetUniqueId()),
-	}))
-
-	// number -> string -> bytes -> base64
-	w.SessionId = base64.StdEncoding.EncodeToString([]byte(strconv.FormatUint(uint64(msg.GetUniqueId()), 10)))
-
-	w.client.Emit(new(WebSessionIdEvent))
 }
 
 func (w *Web) handleAuthNonceResponse(packet *protocol.Packet) {

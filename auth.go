@@ -80,8 +80,6 @@ func (a *Auth) HandlePacket(packet *protocol.Packet) {
 	switch packet.EMsg {
 	case steamlang.EMsg_ClientLogOnResponse:
 		a.handleLogOnResponse(packet)
-	case steamlang.EMsg_ClientNewLoginKey:
-		a.handleLoginKey(packet)
 	case steamlang.EMsg_ClientSessionToken:
 	case steamlang.EMsg_ClientLoggedOff:
 		a.handleLoggedOff(packet)
@@ -135,18 +133,6 @@ func (a *Auth) handleLogOnResponse(packet *protocol.Packet) {
 		})
 		a.client.Disconnect()
 	}
-}
-
-func (a *Auth) handleLoginKey(packet *protocol.Packet) {
-	body := new(protobuf.CMsgClientNewLoginKey)
-	packet.ReadProtoMsg(body)
-	a.client.Write(protocol.NewClientMsgProtobuf(steamlang.EMsg_ClientNewLoginKeyAccepted, &protobuf.CMsgClientNewLoginKeyAccepted{
-		UniqueId: proto.Uint32(body.GetUniqueId()),
-	}))
-	a.client.Emit(&LoginKeyEvent{
-		UniqueId: body.GetUniqueId(),
-		LoginKey: body.GetLoginKey(),
-	})
 }
 
 func (a *Auth) handleLoggedOff(packet *protocol.Packet) {

@@ -10,7 +10,6 @@ import (
 	"go/parser"
 	"go/token"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -108,6 +107,7 @@ func buildProtoMap(srcSubdir string, files map[string]string, outDir string) {
 var clientProtoFiles = map[string]string{
 	"steammessages_base.proto":   "base.pb.go",
 	"encrypted_app_ticket.proto": "app_ticket.pb.go",
+	"offline_ticket.proto":       "offline_ticket.pb.go",
 
 	"steammessages_clientserver.proto":         "client_server.pb.go",
 	"steammessages_clientserver_2.proto":       "client_server_2.pb.go",
@@ -117,16 +117,27 @@ var clientProtoFiles = map[string]string{
 
 	"content_manifest.proto": "content_manifest.pb.go",
 
+	"enums.proto":             "unified/enums.pb.go",
+	"enums_productinfo.proto": "unified/enums_productinfo.pb.go",
 	"steammessages_unified_base.steamclient.proto":      "unified/base.pb.go",
+	"steammessages_auth.steamclient.proto":              "unified/auth.pb.go",
+	"steammessages_client_objects.proto":                "unified/client_objects.pb.go",
 	"steammessages_cloud.steamclient.proto":             "unified/cloud.pb.go",
 	"steammessages_credentials.steamclient.proto":       "unified/credentials.pb.go",
 	"steammessages_deviceauth.steamclient.proto":        "unified/deviceauth.pb.go",
 	"steammessages_gamenotifications.steamclient.proto": "unified/gamenotifications.pb.go",
 	"steammessages_offline.steamclient.proto":           "unified/offline.pb.go",
 	"steammessages_parental.steamclient.proto":          "unified/parental.pb.go",
+	"steammessages_parental_objects.proto":              "unified/parental_objects.pb.go",
 	"steammessages_partnerapps.steamclient.proto":       "unified/partnerapps.pb.go",
 	"steammessages_player.steamclient.proto":            "unified/player.pb.go",
 	"steammessages_publishedfile.steamclient.proto":     "unified/publishedfile.pb.go",
+}
+
+// Duplicate protos that also need to be generated in unified
+var clientUnifiedExtraProtoFiles = map[string]string{
+	"steammessages_base.proto": "unified/mbase.pb.go",
+	"offline_ticket.proto":     "unified/offline_ticket.pb.go",
 }
 
 var tf2ProtoFiles = map[string]string{
@@ -135,6 +146,7 @@ var tf2ProtoFiles = map[string]string{
 	"gcsdk_gcmessages.proto": "gcsdk.pb.go",
 	"tf_gcmessages.proto":    "tf.pb.go",
 	"gcsystemmsgs.proto":     "system.pb.go",
+	"valveextensions.proto":  "valveextensions.pb.go",
 }
 
 var dotaProtoFiles = map[string]string{
@@ -209,7 +221,7 @@ func fixProto(outDir, path string) {
 	// It tries to load each dependency of a file as a seperate package (but in a very, very wrong way).
 	// Because we want some files in the same package, we'll remove those imports to local files.
 
-	file, err := ioutil.ReadFile(path)
+	file, err := os.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
@@ -254,7 +266,7 @@ func fixProto(outDir, path string) {
 		return []byte(filename + "_" + string(match))
 	})
 
-	err = ioutil.WriteFile(path, file, os.ModePerm)
+	err = os.WriteFile(path, file, os.ModePerm)
 	if err != nil {
 		panic(err)
 	}

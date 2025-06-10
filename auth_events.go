@@ -30,11 +30,6 @@ type LogOnFailedEvent struct {
 	Result steamlang.EResult
 }
 
-type LoginKeyEvent struct {
-	UniqueId uint32
-	LoginKey string
-}
-
 type LoggedOffEvent struct {
 	Result steamlang.EResult
 }
