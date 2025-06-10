@@ -91,12 +91,18 @@ func (c *Client) Events() <-chan interface{} {
 }
 
 func (c *Client) SetIpAddress(ipAddress string) error {
-	addr := netutil.ParsePortAddr(ipAddress)
-	if addr == nil {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+
+	addr, err := net.ResolveIPAddr("ip", ipAddress)
+	if err != nil {
 		return fmt.Errorf("invalid IP address format: %s", ipAddress)
 	}
 
-	c.LocalIpAddress = addr.ToTCPAddr()
+	c.LocalIpAddress = &net.TCPAddr{
+		IP: addr.IP,
+	}
+
 	return nil
 }
 
