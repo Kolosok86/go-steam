@@ -93,7 +93,7 @@ func (c *Client) Events() <-chan interface{} {
 func (c *Client) SetIpAddress(ipAddress string) error {
 	addr := netutil.ParsePortAddr(ipAddress)
 	if addr == nil {
-		return fmt.Errorf("invalid IP address format: %s: %w", ipAddress)
+		return fmt.Errorf("invalid IP address format: %s", ipAddress)
 	}
 
 	c.LocalIpAddress = addr.ToTCPAddr()
