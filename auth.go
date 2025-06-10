@@ -1,7 +1,6 @@
 package steam
 
 import (
-	"crypto/sha1"
 	"sync/atomic"
 	"time"
 
@@ -17,8 +16,6 @@ type Auth struct {
 	details *LogOnDetails
 }
 
-type SentryHash []byte
-
 type LogOnDetails struct {
 	Username string
 
@@ -29,10 +26,9 @@ type LogOnDetails struct {
 	AuthCode string
 
 	// If you have a Steam Guard mobile two-factor authentication code, you can provide it here.
-	TwoFactorCode  string
-	SentryFileHash SentryHash
-	RefreshToken   string
-	SteamID        *steamid.SteamId
+	TwoFactorCode string
+	RefreshToken  string
+	SteamID       *steamid.SteamId
 }
 
 // Log on with the given details. You must always specify username and
@@ -83,8 +79,6 @@ func (a *Auth) HandlePacket(packet *protocol.Packet) {
 	case steamlang.EMsg_ClientSessionToken:
 	case steamlang.EMsg_ClientLoggedOff:
 		a.handleLoggedOff(packet)
-	case steamlang.EMsg_ClientUpdateMachineAuth:
-		a.handleUpdateMachineAuth(packet)
 	case steamlang.EMsg_ClientAccountInfo:
 		a.handleAccountInfo(packet)
 	}
@@ -125,8 +119,6 @@ func (a *Auth) handleLogOnResponse(packet *protocol.Packet) {
 			NumLoginFailuresToMigrate: body.GetCountLoginfailuresToMigrate(),
 			NumDisconnectsToMigrate:   body.GetCountDisconnectsToMigrate(),
 		})
-	} else if result == steamlang.EResult_Fail || result == steamlang.EResult_ServiceUnavailable || result == steamlang.EResult_TryAnotherCM {
-		// some error on Steam's side, we'll get an EOF later
 	} else {
 		a.client.Emit(&LogOnFailedEvent{
 			Result: steamlang.EResult(body.GetEresult()),
@@ -147,22 +139,6 @@ func (a *Auth) handleLoggedOff(packet *protocol.Packet) {
 		result = body.Result
 	}
 	a.client.Emit(&LoggedOffEvent{Result: result})
-}
-
-func (a *Auth) handleUpdateMachineAuth(packet *protocol.Packet) {
-	body := new(protobuf.CMsgClientUpdateMachineAuth)
-	packet.ReadProtoMsg(body)
-	hash := sha1.New()
-	hash.Write(packet.Data)
-	sha := hash.Sum(nil)
-
-	msg := protocol.NewClientMsgProtobuf(steamlang.EMsg_ClientUpdateMachineAuthResponse, &protobuf.CMsgClientUpdateMachineAuthResponse{
-		ShaFile: sha,
-	})
-	msg.SetTargetJobId(packet.SourceJobId)
-	a.client.Write(msg)
-
-	a.client.Emit(&MachineAuthUpdateEvent{sha})
 }
 
 func (a *Auth) handleAccountInfo(packet *protocol.Packet) {

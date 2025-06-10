@@ -1516,6 +1516,8 @@ const (
 	EMsg_ClientPICSProductInfoResponse                            EMsg = 8904
 	EMsg_ClientPICSAccessTokenRequest                             EMsg = 8905
 	EMsg_ClientPICSAccessTokenResponse                            EMsg = 8906
+	EMsg_ClientPICSPrivateBetaRequest                             EMsg = 8907
+	EMsg_ClientPICSPrivateBetaResponse                            EMsg = 8908
 	EMsg_WorkerProcess                                            EMsg = 9000
 	EMsg_WorkerProcessPingRequest                                 EMsg = 9000
 	EMsg_WorkerProcessPingResponse                                EMsg = 9001
@@ -1553,6 +1555,8 @@ const (
 	EMsg_DRMWorkerProcessUnpackBlobResponse                       EMsg = 9131
 	EMsg_DRMWorkerProcessInstallAllRequest                        EMsg = 9132
 	EMsg_DRMWorkerProcessInstallAllResponse                       EMsg = 9133
+	EMsg_DRMWorkerProcessSignFile                                 EMsg = 9134
+	EMsg_DRMWorkerProcessSignFileResponse                         EMsg = 9135
 	EMsg_TestWorkerProcess                                        EMsg = 9200
 	EMsg_TestWorkerProcessLoadUnloadModuleRequest                 EMsg = 9200
 	EMsg_TestWorkerProcessLoadUnloadModuleResponse                EMsg = 9201
@@ -1587,6 +1591,12 @@ const (
 	EMsg_ClientUnlockHEVCResponse                                 EMsg = 9514
 	EMsg_RemoteClientStatusRequest                                EMsg = 9515
 	EMsg_RemoteClientStatusResponse                               EMsg = 9516
+	EMsg_RemoteClientAuthorizationRequest                         EMsg = 9517
+	EMsg_RemoteClientAuthorizationResponse                        EMsg = 9518
+	EMsg_RemoteClientAuthorizationCancelRequest                   EMsg = 9519
+	EMsg_RemoteClientAuthorizationConfirmed                       EMsg = 9520
+	EMsg_RemoteClientProofRequest                                 EMsg = 9521
+	EMsg_RemoteClientProofResponse                                EMsg = 9522
 	EMsg_ClientConcurrentSessionsBase                             EMsg = 9600
 	EMsg_ClientPlayingSessionState                                EMsg = 9600
 	EMsg_ClientKickPlayingSession                                 EMsg = 9601
@@ -3420,6 +3430,8 @@ var EMsg_name = map[EMsg]string{
 	8904:  "EMsg_ClientPICSProductInfoResponse",
 	8905:  "EMsg_ClientPICSAccessTokenRequest",
 	8906:  "EMsg_ClientPICSAccessTokenResponse",
+	8907:  "EMsg_ClientPICSPrivateBetaRequest",
+	8908:  "EMsg_ClientPICSPrivateBetaResponse",
 	9000:  "EMsg_WorkerProcess",
 	9001:  "EMsg_WorkerProcessPingResponse",
 	9002:  "EMsg_WorkerProcessShutdown",
@@ -3457,6 +3469,8 @@ var EMsg_name = map[EMsg]string{
 	9131:  "EMsg_DRMWorkerProcessUnpackBlobResponse",
 	9132:  "EMsg_DRMWorkerProcessInstallAllRequest",
 	9133:  "EMsg_DRMWorkerProcessInstallAllResponse",
+	9134:  "EMsg_DRMWorkerProcessSignFile",
+	9135:  "EMsg_DRMWorkerProcessSignFileResponse",
 	9200:  "EMsg_TestWorkerProcess",
 	9201:  "EMsg_TestWorkerProcessLoadUnloadModuleResponse",
 	9202:  "EMsg_TestWorkerProcessServiceModuleCallRequest",
@@ -3490,6 +3504,12 @@ var EMsg_name = map[EMsg]string{
 	9514:  "EMsg_ClientUnlockHEVCResponse",
 	9515:  "EMsg_RemoteClientStatusRequest",
 	9516:  "EMsg_RemoteClientStatusResponse",
+	9517:  "EMsg_RemoteClientAuthorizationRequest",
+	9518:  "EMsg_RemoteClientAuthorizationResponse",
+	9519:  "EMsg_RemoteClientAuthorizationCancelRequest",
+	9520:  "EMsg_RemoteClientAuthorizationConfirmed",
+	9521:  "EMsg_RemoteClientProofRequest",
+	9522:  "EMsg_RemoteClientProofResponse",
 	9600:  "EMsg_ClientConcurrentSessionsBase",
 	9601:  "EMsg_ClientKickPlayingSession",
 	9700:  "EMsg_ClientBroadcastBase",

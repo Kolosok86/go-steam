@@ -27,6 +27,8 @@ type GCClientLauncherType int32
 const (
 	GCClientLauncherType_GCClientLauncherType_DEFAULT      GCClientLauncherType = 0
 	GCClientLauncherType_GCClientLauncherType_PERFECTWORLD GCClientLauncherType = 1
+	GCClientLauncherType_GCClientLauncherType_STEAMCHINA   GCClientLauncherType = 2
+	GCClientLauncherType_GCClientLauncherType_SOURCE2      GCClientLauncherType = 3
 )
 
 // Enum value maps for GCClientLauncherType.
@@ -34,10 +36,14 @@ var (
 	GCClientLauncherType_name = map[int32]string{
 		0: "GCClientLauncherType_DEFAULT",
 		1: "GCClientLauncherType_PERFECTWORLD",
+		2: "GCClientLauncherType_STEAMCHINA",
+		3: "GCClientLauncherType_SOURCE2",
 	}
 	GCClientLauncherType_value = map[string]int32{
 		"GCClientLauncherType_DEFAULT":      0,
 		"GCClientLauncherType_PERFECTWORLD": 1,
+		"GCClientLauncherType_STEAMCHINA":   2,
+		"GCClientLauncherType_SOURCE2":      3,
 	}
 )
 
@@ -141,71 +147,6 @@ func (x *GCConnectionStatus) UnmarshalJSON(b []byte) error {
 // Deprecated: Use GCConnectionStatus.Descriptor instead.
 func (GCConnectionStatus) EnumDescriptor() ([]byte, []int) {
 	return file_gcsdk_gcmessages_proto_rawDescGZIP(), []int{1}
-}
-
-type ESteamPaymentRuleType int32
-
-const (
-	ESteamPaymentRuleType_k_EPaymentRuleTypeComposite       ESteamPaymentRuleType = 0
-	ESteamPaymentRuleType_k_EPaymentRuleTypeWorkshop        ESteamPaymentRuleType = 1
-	ESteamPaymentRuleType_k_EPaymentRuleTypeServiceProvider ESteamPaymentRuleType = 2
-	ESteamPaymentRuleType_k_EPaymentRuleTypePartner         ESteamPaymentRuleType = 3
-	ESteamPaymentRuleType_k_EPaymentRuleTypeSpecialPayment  ESteamPaymentRuleType = 4
-)
-
-// Enum value maps for ESteamPaymentRuleType.
-var (
-	ESteamPaymentRuleType_name = map[int32]string{
-		0: "k_EPaymentRuleTypeComposite",
-		1: "k_EPaymentRuleTypeWorkshop",
-		2: "k_EPaymentRuleTypeServiceProvider",
-		3: "k_EPaymentRuleTypePartner",
-		4: "k_EPaymentRuleTypeSpecialPayment",
-	}
-	ESteamPaymentRuleType_value = map[string]int32{
-		"k_EPaymentRuleTypeComposite":       0,
-		"k_EPaymentRuleTypeWorkshop":        1,
-		"k_EPaymentRuleTypeServiceProvider": 2,
-		"k_EPaymentRuleTypePartner":         3,
-		"k_EPaymentRuleTypeSpecialPayment":  4,
-	}
-)
-
-func (x ESteamPaymentRuleType) Enum() *ESteamPaymentRuleType {
-	p := new(ESteamPaymentRuleType)
-	*p = x
-	return p
-}
-
-func (x ESteamPaymentRuleType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ESteamPaymentRuleType) Descriptor() protoreflect.EnumDescriptor {
-	return file_gcsdk_gcmessages_proto_enumTypes[2].Descriptor()
-}
-
-func (ESteamPaymentRuleType) Type() protoreflect.EnumType {
-	return &file_gcsdk_gcmessages_proto_enumTypes[2]
-}
-
-func (x ESteamPaymentRuleType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Do not use.
-func (x *ESteamPaymentRuleType) UnmarshalJSON(b []byte) error {
-	num, err := protoimpl.X.UnmarshalJSONEnum(x.Descriptor(), b)
-	if err != nil {
-		return err
-	}
-	*x = ESteamPaymentRuleType(num)
-	return nil
-}
-
-// Deprecated: Use ESteamPaymentRuleType.Descriptor instead.
-func (ESteamPaymentRuleType) EnumDescriptor() ([]byte, []int) {
-	return file_gcsdk_gcmessages_proto_rawDescGZIP(), []int{2}
 }
 
 type CMsgSOIDOwner struct {
@@ -1373,7 +1314,7 @@ func (x *CMsgSOCacheHaveVersion) GetVersion() uint64 {
 	return 0
 }
 
-type CMsgClientHelloGC struct {
+type CMsgClientHello struct {
 	state                 protoimpl.MessageState    `protogen:"open.v1"`
 	Version               *uint32                   `protobuf:"varint,1,opt,name=version" json:"version,omitempty"`
 	SocacheHaveVersions   []*CMsgSOCacheHaveVersion `protobuf:"bytes,2,rep,name=socache_have_versions,json=socacheHaveVersions" json:"socache_have_versions,omitempty"`
@@ -1388,20 +1329,20 @@ type CMsgClientHelloGC struct {
 	sizeCache             protoimpl.SizeCache
 }
 
-func (x *CMsgClientHelloGC) Reset() {
-	*x = CMsgClientHelloGC{}
+func (x *CMsgClientHello) Reset() {
+	*x = CMsgClientHello{}
 	mi := &file_gcsdk_gcmessages_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CMsgClientHelloGC) String() string {
+func (x *CMsgClientHello) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CMsgClientHelloGC) ProtoMessage() {}
+func (*CMsgClientHello) ProtoMessage() {}
 
-func (x *CMsgClientHelloGC) ProtoReflect() protoreflect.Message {
+func (x *CMsgClientHello) ProtoReflect() protoreflect.Message {
 	mi := &file_gcsdk_gcmessages_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1413,68 +1354,68 @@ func (x *CMsgClientHelloGC) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CMsgClientHelloGC.ProtoReflect.Descriptor instead.
-func (*CMsgClientHelloGC) Descriptor() ([]byte, []int) {
+// Deprecated: Use CMsgClientHello.ProtoReflect.Descriptor instead.
+func (*CMsgClientHello) Descriptor() ([]byte, []int) {
 	return file_gcsdk_gcmessages_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *CMsgClientHelloGC) GetVersion() uint32 {
+func (x *CMsgClientHello) GetVersion() uint32 {
 	if x != nil && x.Version != nil {
 		return *x.Version
 	}
 	return 0
 }
 
-func (x *CMsgClientHelloGC) GetSocacheHaveVersions() []*CMsgSOCacheHaveVersion {
+func (x *CMsgClientHello) GetSocacheHaveVersions() []*CMsgSOCacheHaveVersion {
 	if x != nil {
 		return x.SocacheHaveVersions
 	}
 	return nil
 }
 
-func (x *CMsgClientHelloGC) GetClientSessionNeed() uint32 {
+func (x *CMsgClientHello) GetClientSessionNeed() uint32 {
 	if x != nil && x.ClientSessionNeed != nil {
 		return *x.ClientSessionNeed
 	}
 	return 0
 }
 
-func (x *CMsgClientHelloGC) GetClientLauncher() uint32 {
+func (x *CMsgClientHello) GetClientLauncher() uint32 {
 	if x != nil && x.ClientLauncher != nil {
 		return *x.ClientLauncher
 	}
 	return 0
 }
 
-func (x *CMsgClientHelloGC) GetPartnerSrcid() uint32 {
+func (x *CMsgClientHello) GetPartnerSrcid() uint32 {
 	if x != nil && x.PartnerSrcid != nil {
 		return *x.PartnerSrcid
 	}
 	return 0
 }
 
-func (x *CMsgClientHelloGC) GetPartnerAccountid() uint32 {
+func (x *CMsgClientHello) GetPartnerAccountid() uint32 {
 	if x != nil && x.PartnerAccountid != nil {
 		return *x.PartnerAccountid
 	}
 	return 0
 }
 
-func (x *CMsgClientHelloGC) GetPartnerAccountflags() uint32 {
+func (x *CMsgClientHello) GetPartnerAccountflags() uint32 {
 	if x != nil && x.PartnerAccountflags != nil {
 		return *x.PartnerAccountflags
 	}
 	return 0
 }
 
-func (x *CMsgClientHelloGC) GetPartnerAccountbalance() uint32 {
+func (x *CMsgClientHello) GetPartnerAccountbalance() uint32 {
 	if x != nil && x.PartnerAccountbalance != nil {
 		return *x.PartnerAccountbalance
 	}
 	return 0
 }
 
-func (x *CMsgClientHelloGC) GetSteamLauncher() uint32 {
+func (x *CMsgClientHello) GetSteamLauncher() uint32 {
 	if x != nil && x.SteamLauncher != nil {
 		return *x.SteamLauncher
 	}
@@ -1490,6 +1431,7 @@ type CMsgServerHello struct {
 	LegacySteamdatagramRouting []byte                    `protobuf:"bytes,6,opt,name=legacy_steamdatagram_routing,json=legacySteamdatagramRouting" json:"legacy_steamdatagram_routing,omitempty"`
 	RequiredInternalAddr       *uint32                   `protobuf:"varint,7,opt,name=required_internal_addr,json=requiredInternalAddr" json:"required_internal_addr,omitempty"`
 	SteamdatagramLogin         []byte                    `protobuf:"bytes,8,opt,name=steamdatagram_login,json=steamdatagramLogin" json:"steamdatagram_login,omitempty"`
+	SocacheControl             *uint32                   `protobuf:"varint,9,opt,name=socache_control,json=socacheControl" json:"socache_control,omitempty"`
 	unknownFields              protoimpl.UnknownFields
 	sizeCache                  protoimpl.SizeCache
 }
@@ -1571,6 +1513,13 @@ func (x *CMsgServerHello) GetSteamdatagramLogin() []byte {
 		return x.SteamdatagramLogin
 	}
 	return nil
+}
+
+func (x *CMsgServerHello) GetSocacheControl() uint32 {
+	if x != nil && x.SocacheControl != nil {
+		return *x.SocacheControl
+	}
+	return 0
 }
 
 type CMsgClientWelcome struct {
@@ -1935,13 +1884,16 @@ func (x *CWorkshop_GetContributors_Response) GetContributors() []uint64 {
 }
 
 type CWorkshop_SetItemPaymentRules_Request struct {
-	state                   protoimpl.MessageState                                           `protogen:"open.v1"`
-	Appid                   *uint32                                                          `protobuf:"varint,1,opt,name=appid" json:"appid,omitempty"`
-	Gameitemid              *uint32                                                          `protobuf:"varint,2,opt,name=gameitemid" json:"gameitemid,omitempty"`
-	AssociatedWorkshopFiles []*CWorkshop_SetItemPaymentRules_Request_WorkshopItemPaymentRule `protobuf:"bytes,3,rep,name=associated_workshop_files,json=associatedWorkshopFiles" json:"associated_workshop_files,omitempty"`
-	PartnerAccounts         []*CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule  `protobuf:"bytes,4,rep,name=partner_accounts,json=partnerAccounts" json:"partner_accounts,omitempty"`
-	unknownFields           protoimpl.UnknownFields
-	sizeCache               protoimpl.SizeCache
+	state                                   protoimpl.MessageState                                           `protogen:"open.v1"`
+	Appid                                   *uint32                                                          `protobuf:"varint,1,opt,name=appid" json:"appid,omitempty"`
+	Gameitemid                              *uint32                                                          `protobuf:"varint,2,opt,name=gameitemid" json:"gameitemid,omitempty"`
+	AssociatedWorkshopFiles                 []*CWorkshop_SetItemPaymentRules_Request_WorkshopItemPaymentRule `protobuf:"bytes,3,rep,name=associated_workshop_files,json=associatedWorkshopFiles" json:"associated_workshop_files,omitempty"`
+	PartnerAccounts                         []*CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule  `protobuf:"bytes,4,rep,name=partner_accounts,json=partnerAccounts" json:"partner_accounts,omitempty"`
+	ValidateOnly                            *bool                                                            `protobuf:"varint,5,opt,name=validate_only,json=validateOnly" json:"validate_only,omitempty"`
+	MakeWorkshopFilesSubscribable           *bool                                                            `protobuf:"varint,6,opt,name=make_workshop_files_subscribable,json=makeWorkshopFilesSubscribable" json:"make_workshop_files_subscribable,omitempty"`
+	AssociatedWorkshopFileForDirectPayments *CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule `protobuf:"bytes,7,opt,name=associated_workshop_file_for_direct_payments,json=associatedWorkshopFileForDirectPayments" json:"associated_workshop_file_for_direct_payments,omitempty"`
+	unknownFields                           protoimpl.UnknownFields
+	sizeCache                               protoimpl.SizeCache
 }
 
 func (x *CWorkshop_SetItemPaymentRules_Request) Reset() {
@@ -1998,6 +1950,27 @@ func (x *CWorkshop_SetItemPaymentRules_Request) GetAssociatedWorkshopFiles() []*
 func (x *CWorkshop_SetItemPaymentRules_Request) GetPartnerAccounts() []*CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule {
 	if x != nil {
 		return x.PartnerAccounts
+	}
+	return nil
+}
+
+func (x *CWorkshop_SetItemPaymentRules_Request) GetValidateOnly() bool {
+	if x != nil && x.ValidateOnly != nil {
+		return *x.ValidateOnly
+	}
+	return false
+}
+
+func (x *CWorkshop_SetItemPaymentRules_Request) GetMakeWorkshopFilesSubscribable() bool {
+	if x != nil && x.MakeWorkshopFilesSubscribable != nil {
+		return *x.MakeWorkshopFilesSubscribable
+	}
+	return false
+}
+
+func (x *CWorkshop_SetItemPaymentRules_Request) GetAssociatedWorkshopFileForDirectPayments() *CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule {
+	if x != nil {
+		return x.AssociatedWorkshopFileForDirectPayments
 	}
 	return nil
 }
@@ -2342,6 +2315,66 @@ func (*CProductInfo_SetRichPresenceLocalization_Response) Descriptor() ([]byte, 
 	return file_gcsdk_gcmessages_proto_rawDescGZIP(), []int{34}
 }
 
+type CMsgSerializedSOCache struct {
+	state                protoimpl.MessageState         `protogen:"open.v1"`
+	FileVersion          *uint32                        `protobuf:"varint,1,opt,name=file_version,json=fileVersion" json:"file_version,omitempty"`
+	Caches               []*CMsgSerializedSOCache_Cache `protobuf:"bytes,2,rep,name=caches" json:"caches,omitempty"`
+	GcSocacheFileVersion *uint32                        `protobuf:"varint,3,opt,name=gc_socache_file_version,json=gcSocacheFileVersion" json:"gc_socache_file_version,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *CMsgSerializedSOCache) Reset() {
+	*x = CMsgSerializedSOCache{}
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CMsgSerializedSOCache) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CMsgSerializedSOCache) ProtoMessage() {}
+
+func (x *CMsgSerializedSOCache) ProtoReflect() protoreflect.Message {
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CMsgSerializedSOCache.ProtoReflect.Descriptor instead.
+func (*CMsgSerializedSOCache) Descriptor() ([]byte, []int) {
+	return file_gcsdk_gcmessages_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *CMsgSerializedSOCache) GetFileVersion() uint32 {
+	if x != nil && x.FileVersion != nil {
+		return *x.FileVersion
+	}
+	return 0
+}
+
+func (x *CMsgSerializedSOCache) GetCaches() []*CMsgSerializedSOCache_Cache {
+	if x != nil {
+		return x.Caches
+	}
+	return nil
+}
+
+func (x *CMsgSerializedSOCache) GetGcSocacheFileVersion() uint32 {
+	if x != nil && x.GcSocacheFileVersion != nil {
+		return *x.GcSocacheFileVersion
+	}
+	return 0
+}
+
 type CMsgSOMultipleObjects_SingleObject struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TypeId        *int32                 `protobuf:"varint,1,opt,name=type_id,json=typeId" json:"type_id,omitempty"`
@@ -2352,7 +2385,7 @@ type CMsgSOMultipleObjects_SingleObject struct {
 
 func (x *CMsgSOMultipleObjects_SingleObject) Reset() {
 	*x = CMsgSOMultipleObjects_SingleObject{}
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[35]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2364,7 +2397,7 @@ func (x *CMsgSOMultipleObjects_SingleObject) String() string {
 func (*CMsgSOMultipleObjects_SingleObject) ProtoMessage() {}
 
 func (x *CMsgSOMultipleObjects_SingleObject) ProtoReflect() protoreflect.Message {
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[35]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2404,7 +2437,7 @@ type CMsgSOCacheSubscribed_SubscribedType struct {
 
 func (x *CMsgSOCacheSubscribed_SubscribedType) Reset() {
 	*x = CMsgSOCacheSubscribed_SubscribedType{}
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[36]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2416,7 +2449,7 @@ func (x *CMsgSOCacheSubscribed_SubscribedType) String() string {
 func (*CMsgSOCacheSubscribed_SubscribedType) ProtoMessage() {}
 
 func (x *CMsgSOCacheSubscribed_SubscribedType) ProtoReflect() protoreflect.Message {
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[36]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2457,7 +2490,7 @@ type CMsgClientWelcome_Location struct {
 
 func (x *CMsgClientWelcome_Location) Reset() {
 	*x = CMsgClientWelcome_Location{}
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[37]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2469,7 +2502,7 @@ func (x *CMsgClientWelcome_Location) String() string {
 func (*CMsgClientWelcome_Location) ProtoMessage() {}
 
 func (x *CMsgClientWelcome_Location) ProtoReflect() protoreflect.Message {
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[37]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2517,7 +2550,7 @@ type CWorkshop_PopulateItemDescriptions_Request_SingleItemDescription struct {
 
 func (x *CWorkshop_PopulateItemDescriptions_Request_SingleItemDescription) Reset() {
 	*x = CWorkshop_PopulateItemDescriptions_Request_SingleItemDescription{}
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[38]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2529,7 +2562,7 @@ func (x *CWorkshop_PopulateItemDescriptions_Request_SingleItemDescription) Strin
 func (*CWorkshop_PopulateItemDescriptions_Request_SingleItemDescription) ProtoMessage() {}
 
 func (x *CWorkshop_PopulateItemDescriptions_Request_SingleItemDescription) ProtoReflect() protoreflect.Message {
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[38]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2576,7 +2609,7 @@ type CWorkshop_PopulateItemDescriptions_Request_ItemDescriptionsLanguageBlock st
 
 func (x *CWorkshop_PopulateItemDescriptions_Request_ItemDescriptionsLanguageBlock) Reset() {
 	*x = CWorkshop_PopulateItemDescriptions_Request_ItemDescriptionsLanguageBlock{}
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[39]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2588,7 +2621,7 @@ func (x *CWorkshop_PopulateItemDescriptions_Request_ItemDescriptionsLanguageBloc
 func (*CWorkshop_PopulateItemDescriptions_Request_ItemDescriptionsLanguageBlock) ProtoMessage() {}
 
 func (x *CWorkshop_PopulateItemDescriptions_Request_ItemDescriptionsLanguageBlock) ProtoReflect() protoreflect.Message {
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[39]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2635,7 +2668,7 @@ const (
 
 func (x *CWorkshop_SetItemPaymentRules_Request_WorkshopItemPaymentRule) Reset() {
 	*x = CWorkshop_SetItemPaymentRules_Request_WorkshopItemPaymentRule{}
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[40]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2647,7 +2680,7 @@ func (x *CWorkshop_SetItemPaymentRules_Request_WorkshopItemPaymentRule) String()
 func (*CWorkshop_SetItemPaymentRules_Request_WorkshopItemPaymentRule) ProtoMessage() {}
 
 func (x *CWorkshop_SetItemPaymentRules_Request_WorkshopItemPaymentRule) ProtoReflect() protoreflect.Message {
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[40]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2691,6 +2724,58 @@ func (x *CWorkshop_SetItemPaymentRules_Request_WorkshopItemPaymentRule) GetRuleT
 	return Default_CWorkshop_SetItemPaymentRules_Request_WorkshopItemPaymentRule_RuleType
 }
 
+type CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	WorkshopFileId  *uint64                `protobuf:"varint,1,opt,name=workshop_file_id,json=workshopFileId" json:"workshop_file_id,omitempty"`
+	RuleDescription *string                `protobuf:"bytes,2,opt,name=rule_description,json=ruleDescription" json:"rule_description,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule) Reset() {
+	*x = CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule{}
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule) ProtoMessage() {}
+
+func (x *CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule) ProtoReflect() protoreflect.Message {
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule.ProtoReflect.Descriptor instead.
+func (*CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule) Descriptor() ([]byte, []int) {
+	return file_gcsdk_gcmessages_proto_rawDescGZIP(), []int{27, 1}
+}
+
+func (x *CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule) GetWorkshopFileId() uint64 {
+	if x != nil && x.WorkshopFileId != nil {
+		return *x.WorkshopFileId
+	}
+	return 0
+}
+
+func (x *CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule) GetRuleDescription() string {
+	if x != nil && x.RuleDescription != nil {
+		return *x.RuleDescription
+	}
+	return ""
+}
+
 type CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	AccountId         *uint32                `protobuf:"varint,1,opt,name=account_id,json=accountId" json:"account_id,omitempty"`
@@ -2702,7 +2787,7 @@ type CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule struct {
 
 func (x *CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule) Reset() {
 	*x = CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule{}
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[41]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2714,7 +2799,7 @@ func (x *CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule) String() 
 func (*CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule) ProtoMessage() {}
 
 func (x *CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule) ProtoReflect() protoreflect.Message {
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[41]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2727,7 +2812,7 @@ func (x *CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule) ProtoRefl
 
 // Deprecated: Use CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule.ProtoReflect.Descriptor instead.
 func (*CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule) Descriptor() ([]byte, []int) {
-	return file_gcsdk_gcmessages_proto_rawDescGZIP(), []int{27, 1}
+	return file_gcsdk_gcmessages_proto_rawDescGZIP(), []int{27, 2}
 }
 
 func (x *CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule) GetAccountId() uint32 {
@@ -2766,7 +2851,7 @@ type CGameServers_AggregationQuery_Response_Group struct {
 
 func (x *CGameServers_AggregationQuery_Response_Group) Reset() {
 	*x = CGameServers_AggregationQuery_Response_Group{}
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[42]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2778,7 +2863,7 @@ func (x *CGameServers_AggregationQuery_Response_Group) String() string {
 func (*CGameServers_AggregationQuery_Response_Group) ProtoMessage() {}
 
 func (x *CGameServers_AggregationQuery_Response_Group) ProtoReflect() protoreflect.Message {
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[42]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2853,7 +2938,7 @@ type CProductInfo_SetRichPresenceLocalization_Request_Token struct {
 
 func (x *CProductInfo_SetRichPresenceLocalization_Request_Token) Reset() {
 	*x = CProductInfo_SetRichPresenceLocalization_Request_Token{}
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[43]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2865,7 +2950,7 @@ func (x *CProductInfo_SetRichPresenceLocalization_Request_Token) String() string
 func (*CProductInfo_SetRichPresenceLocalization_Request_Token) ProtoMessage() {}
 
 func (x *CProductInfo_SetRichPresenceLocalization_Request_Token) ProtoReflect() protoreflect.Message {
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[43]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2905,7 +2990,7 @@ type CProductInfo_SetRichPresenceLocalization_Request_LanguageSection struct {
 
 func (x *CProductInfo_SetRichPresenceLocalization_Request_LanguageSection) Reset() {
 	*x = CProductInfo_SetRichPresenceLocalization_Request_LanguageSection{}
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[44]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2917,7 +3002,7 @@ func (x *CProductInfo_SetRichPresenceLocalization_Request_LanguageSection) Strin
 func (*CProductInfo_SetRichPresenceLocalization_Request_LanguageSection) ProtoMessage() {}
 
 func (x *CProductInfo_SetRichPresenceLocalization_Request_LanguageSection) ProtoReflect() protoreflect.Message {
-	mi := &file_gcsdk_gcmessages_proto_msgTypes[44]
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2945,6 +3030,186 @@ func (x *CProductInfo_SetRichPresenceLocalization_Request_LanguageSection) GetTo
 		return x.Tokens
 	}
 	return nil
+}
+
+type CMsgSerializedSOCache_TypeCache struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          *uint32                `protobuf:"varint,1,opt,name=type" json:"type,omitempty"`
+	Objects       [][]byte               `protobuf:"bytes,2,rep,name=objects" json:"objects,omitempty"`
+	ServiceId     *uint32                `protobuf:"varint,3,opt,name=service_id,json=serviceId" json:"service_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CMsgSerializedSOCache_TypeCache) Reset() {
+	*x = CMsgSerializedSOCache_TypeCache{}
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[47]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CMsgSerializedSOCache_TypeCache) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CMsgSerializedSOCache_TypeCache) ProtoMessage() {}
+
+func (x *CMsgSerializedSOCache_TypeCache) ProtoReflect() protoreflect.Message {
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[47]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CMsgSerializedSOCache_TypeCache.ProtoReflect.Descriptor instead.
+func (*CMsgSerializedSOCache_TypeCache) Descriptor() ([]byte, []int) {
+	return file_gcsdk_gcmessages_proto_rawDescGZIP(), []int{35, 0}
+}
+
+func (x *CMsgSerializedSOCache_TypeCache) GetType() uint32 {
+	if x != nil && x.Type != nil {
+		return *x.Type
+	}
+	return 0
+}
+
+func (x *CMsgSerializedSOCache_TypeCache) GetObjects() [][]byte {
+	if x != nil {
+		return x.Objects
+	}
+	return nil
+}
+
+func (x *CMsgSerializedSOCache_TypeCache) GetServiceId() uint32 {
+	if x != nil && x.ServiceId != nil {
+		return *x.ServiceId
+	}
+	return 0
+}
+
+type CMsgSerializedSOCache_Cache struct {
+	state         protoimpl.MessageState                 `protogen:"open.v1"`
+	Type          *uint32                                `protobuf:"varint,1,opt,name=type" json:"type,omitempty"`
+	Id            *uint64                                `protobuf:"varint,2,opt,name=id" json:"id,omitempty"`
+	Versions      []*CMsgSerializedSOCache_Cache_Version `protobuf:"bytes,3,rep,name=versions" json:"versions,omitempty"`
+	TypeCaches    []*CMsgSerializedSOCache_TypeCache     `protobuf:"bytes,4,rep,name=type_caches,json=typeCaches" json:"type_caches,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CMsgSerializedSOCache_Cache) Reset() {
+	*x = CMsgSerializedSOCache_Cache{}
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[48]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CMsgSerializedSOCache_Cache) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CMsgSerializedSOCache_Cache) ProtoMessage() {}
+
+func (x *CMsgSerializedSOCache_Cache) ProtoReflect() protoreflect.Message {
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[48]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CMsgSerializedSOCache_Cache.ProtoReflect.Descriptor instead.
+func (*CMsgSerializedSOCache_Cache) Descriptor() ([]byte, []int) {
+	return file_gcsdk_gcmessages_proto_rawDescGZIP(), []int{35, 1}
+}
+
+func (x *CMsgSerializedSOCache_Cache) GetType() uint32 {
+	if x != nil && x.Type != nil {
+		return *x.Type
+	}
+	return 0
+}
+
+func (x *CMsgSerializedSOCache_Cache) GetId() uint64 {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return 0
+}
+
+func (x *CMsgSerializedSOCache_Cache) GetVersions() []*CMsgSerializedSOCache_Cache_Version {
+	if x != nil {
+		return x.Versions
+	}
+	return nil
+}
+
+func (x *CMsgSerializedSOCache_Cache) GetTypeCaches() []*CMsgSerializedSOCache_TypeCache {
+	if x != nil {
+		return x.TypeCaches
+	}
+	return nil
+}
+
+type CMsgSerializedSOCache_Cache_Version struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Service       *uint32                `protobuf:"varint,1,opt,name=service" json:"service,omitempty"`
+	Version       *uint64                `protobuf:"varint,2,opt,name=version" json:"version,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CMsgSerializedSOCache_Cache_Version) Reset() {
+	*x = CMsgSerializedSOCache_Cache_Version{}
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[49]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CMsgSerializedSOCache_Cache_Version) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CMsgSerializedSOCache_Cache_Version) ProtoMessage() {}
+
+func (x *CMsgSerializedSOCache_Cache_Version) ProtoReflect() protoreflect.Message {
+	mi := &file_gcsdk_gcmessages_proto_msgTypes[49]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CMsgSerializedSOCache_Cache_Version.ProtoReflect.Descriptor instead.
+func (*CMsgSerializedSOCache_Cache_Version) Descriptor() ([]byte, []int) {
+	return file_gcsdk_gcmessages_proto_rawDescGZIP(), []int{35, 1, 0}
+}
+
+func (x *CMsgSerializedSOCache_Cache_Version) GetService() uint32 {
+	if x != nil && x.Service != nil {
+		return *x.Service
+	}
+	return 0
+}
+
+func (x *CMsgSerializedSOCache_Cache_Version) GetVersion() uint64 {
+	if x != nil && x.Version != nil {
+		return *x.Version
+	}
+	return 0
 }
 
 var File_gcsdk_gcmessages_proto protoreflect.FileDescriptor
@@ -3050,8 +3315,8 @@ const file_gcsdk_gcmessages_proto_rawDesc = "" +
 	"\x02ip\x18\x01 \x01(\aR\x02ip\"V\n" +
 	"\x16CMsgSOCacheHaveVersion\x12\"\n" +
 	"\x04soid\x18\x01 \x01(\v2\x0e.CMsgSOIDOwnerR\x04soid\x12\x18\n" +
-	"\aversion\x18\x02 \x01(\x06R\aversion\"\xb6\x03\n" +
-	"\x11CMsgClientHelloGC\x12\x18\n" +
+	"\aversion\x18\x02 \x01(\x06R\aversion\"\xb4\x03\n" +
+	"\x0fCMsgClientHello\x12\x18\n" +
 	"\aversion\x18\x01 \x01(\rR\aversion\x12K\n" +
 	"\x15socache_have_versions\x18\x02 \x03(\v2\x17.CMsgSOCacheHaveVersionR\x13socacheHaveVersions\x12.\n" +
 	"\x13client_session_need\x18\x03 \x01(\rR\x11clientSessionNeed\x12'\n" +
@@ -3060,7 +3325,7 @@ const file_gcsdk_gcmessages_proto_rawDesc = "" +
 	"\x11partner_accountid\x18\x06 \x01(\rR\x10partnerAccountid\x121\n" +
 	"\x14partner_accountflags\x18\a \x01(\rR\x13partnerAccountflags\x125\n" +
 	"\x16partner_accountbalance\x18\b \x01(\rR\x15partnerAccountbalance\x12%\n" +
-	"\x0esteam_launcher\x18\t \x01(\rR\rsteamLauncher\"\x87\x03\n" +
+	"\x0esteam_launcher\x18\t \x01(\rR\rsteamLauncher\"\xb0\x03\n" +
 	"\x0fCMsgServerHello\x12\x18\n" +
 	"\aversion\x18\x01 \x01(\rR\aversion\x12K\n" +
 	"\x15socache_have_versions\x18\x02 \x03(\v2\x17.CMsgSOCacheHaveVersionR\x13socacheHaveVersions\x12;\n" +
@@ -3068,7 +3333,8 @@ const file_gcsdk_gcmessages_proto_rawDesc = "" +
 	"\x0fclient_launcher\x18\x04 \x01(\rR\x0eclientLauncher\x12@\n" +
 	"\x1clegacy_steamdatagram_routing\x18\x06 \x01(\fR\x1alegacySteamdatagramRouting\x124\n" +
 	"\x16required_internal_addr\x18\a \x01(\rR\x14requiredInternalAddr\x12/\n" +
-	"\x13steamdatagram_login\x18\b \x01(\fR\x12steamdatagramLogin\"\xf9\x04\n" +
+	"\x13steamdatagram_login\x18\b \x01(\fR\x12steamdatagramLogin\x12'\n" +
+	"\x0fsocache_control\x18\t \x01(\rR\x0esocacheControl\"\xf9\x04\n" +
 	"\x11CMsgClientWelcome\x12\x18\n" +
 	"\aversion\x18\x01 \x01(\rR\aversion\x12\x1b\n" +
 	"\tgame_data\x18\x02 \x01(\fR\bgameData\x12V\n" +
@@ -3114,19 +3380,25 @@ const file_gcsdk_gcmessages_proto_rawDesc = "" +
 	"gameitemid\x18\x02 \x01(\rR\n" +
 	"gameitemid\"H\n" +
 	"\"CWorkshop_GetContributors_Response\x12\"\n" +
-	"\fcontributors\x18\x01 \x03(\x06R\fcontributors\"\x97\x05\n" +
+	"\fcontributors\x18\x01 \x03(\x06R\fcontributors\"\x99\b\n" +
 	"%CWorkshop_SetItemPaymentRules_Request\x12\x14\n" +
 	"\x05appid\x18\x01 \x01(\rR\x05appid\x12\x1e\n" +
 	"\n" +
 	"gameitemid\x18\x02 \x01(\rR\n" +
 	"gameitemid\x12z\n" +
 	"\x19associated_workshop_files\x18\x03 \x03(\v2>.CWorkshop_SetItemPaymentRules_Request.WorkshopItemPaymentRuleR\x17associatedWorkshopFiles\x12h\n" +
-	"\x10partner_accounts\x18\x04 \x03(\v2=.CWorkshop_SetItemPaymentRules_Request.PartnerItemPaymentRuleR\x0fpartnerAccounts\x1a\xbd\x01\n" +
+	"\x10partner_accounts\x18\x04 \x03(\v2=.CWorkshop_SetItemPaymentRules_Request.PartnerItemPaymentRuleR\x0fpartnerAccounts\x12#\n" +
+	"\rvalidate_only\x18\x05 \x01(\bR\fvalidateOnly\x12G\n" +
+	" make_workshop_files_subscribable\x18\x06 \x01(\bR\x1dmakeWorkshopFilesSubscribable\x12\x9f\x01\n" +
+	",associated_workshop_file_for_direct_payments\x18\a \x01(\v2@.CWorkshop_SetItemPaymentRules_Request.WorkshopDirectPaymentRuleR'associatedWorkshopFileForDirectPayments\x1a\xbd\x01\n" +
 	"\x17WorkshopItemPaymentRule\x12(\n" +
 	"\x10workshop_file_id\x18\x01 \x01(\x04R\x0eworkshopFileId\x12-\n" +
 	"\x12revenue_percentage\x18\x02 \x01(\x02R\x11revenuePercentage\x12)\n" +
 	"\x10rule_description\x18\x03 \x01(\tR\x0fruleDescription\x12\x1e\n" +
-	"\trule_type\x18\x04 \x01(\r:\x011R\bruleType\x1a\x91\x01\n" +
+	"\trule_type\x18\x04 \x01(\r:\x011R\bruleType\x1ap\n" +
+	"\x19WorkshopDirectPaymentRule\x12(\n" +
+	"\x10workshop_file_id\x18\x01 \x01(\x04R\x0eworkshopFileId\x12)\n" +
+	"\x10rule_description\x18\x02 \x01(\tR\x0fruleDescription\x1a\x91\x01\n" +
 	"\x16PartnerItemPaymentRule\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\rR\taccountId\x12-\n" +
@@ -3165,22 +3437,36 @@ const file_gcsdk_gcmessages_proto_rawDesc = "" +
 	"\x0fLanguageSection\x12\x1a\n" +
 	"\blanguage\x18\x01 \x01(\tR\blanguage\x12O\n" +
 	"\x06tokens\x18\x02 \x03(\v27.CProductInfo_SetRichPresenceLocalization_Request.TokenR\x06tokens\"3\n" +
-	"1CProductInfo_SetRichPresenceLocalization_Response*_\n" +
+	"1CProductInfo_SetRichPresenceLocalization_Response\"\xf3\x03\n" +
+	"\x15CMsgSerializedSOCache\x12!\n" +
+	"\ffile_version\x18\x01 \x01(\rR\vfileVersion\x124\n" +
+	"\x06caches\x18\x02 \x03(\v2\x1c.CMsgSerializedSOCache.CacheR\x06caches\x125\n" +
+	"\x17gc_socache_file_version\x18\x03 \x01(\rR\x14gcSocacheFileVersion\x1aX\n" +
+	"\tTypeCache\x12\x12\n" +
+	"\x04type\x18\x01 \x01(\rR\x04type\x12\x18\n" +
+	"\aobjects\x18\x02 \x03(\fR\aobjects\x12\x1d\n" +
+	"\n" +
+	"service_id\x18\x03 \x01(\rR\tserviceId\x1a\xef\x01\n" +
+	"\x05Cache\x12\x12\n" +
+	"\x04type\x18\x01 \x01(\rR\x04type\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\x04R\x02id\x12@\n" +
+	"\bversions\x18\x03 \x03(\v2$.CMsgSerializedSOCache.Cache.VersionR\bversions\x12A\n" +
+	"\vtype_caches\x18\x04 \x03(\v2 .CMsgSerializedSOCache.TypeCacheR\n" +
+	"typeCaches\x1a=\n" +
+	"\aVersion\x12\x18\n" +
+	"\aservice\x18\x01 \x01(\rR\aservice\x12\x18\n" +
+	"\aversion\x18\x02 \x01(\x04R\aversion*\xa6\x01\n" +
 	"\x14GCClientLauncherType\x12 \n" +
 	"\x1cGCClientLauncherType_DEFAULT\x10\x00\x12%\n" +
-	"!GCClientLauncherType_PERFECTWORLD\x10\x01*\xd5\x01\n" +
+	"!GCClientLauncherType_PERFECTWORLD\x10\x01\x12#\n" +
+	"\x1fGCClientLauncherType_STEAMCHINA\x10\x02\x12 \n" +
+	"\x1cGCClientLauncherType_SOURCE2\x10\x03*\xd5\x01\n" +
 	"\x12GCConnectionStatus\x12#\n" +
 	"\x1fGCConnectionStatus_HAVE_SESSION\x10\x00\x12$\n" +
 	" GCConnectionStatus_GC_GOING_DOWN\x10\x01\x12!\n" +
 	"\x1dGCConnectionStatus_NO_SESSION\x10\x02\x120\n" +
 	",GCConnectionStatus_NO_SESSION_IN_LOGON_QUEUE\x10\x03\x12\x1f\n" +
-	"\x1bGCConnectionStatus_NO_STEAM\x10\x04*\xc4\x01\n" +
-	"\x15ESteamPaymentRuleType\x12\x1f\n" +
-	"\x1bk_EPaymentRuleTypeComposite\x10\x00\x12\x1e\n" +
-	"\x1ak_EPaymentRuleTypeWorkshop\x10\x01\x12%\n" +
-	"!k_EPaymentRuleTypeServiceProvider\x10\x02\x12\x1d\n" +
-	"\x19k_EPaymentRuleTypePartner\x10\x03\x12$\n" +
-	" k_EPaymentRuleTypeSpecialPayment\x10\x04B\x05H\x01\x80\x01\x00"
+	"\x1bGCConnectionStatus_NO_STEAM\x10\x04"
 
 var (
 	file_gcsdk_gcmessages_proto_rawDescOnce sync.Once
@@ -3194,86 +3480,94 @@ func file_gcsdk_gcmessages_proto_rawDescGZIP() []byte {
 	return file_gcsdk_gcmessages_proto_rawDescData
 }
 
-var file_gcsdk_gcmessages_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_gcsdk_gcmessages_proto_msgTypes = make([]protoimpl.MessageInfo, 45)
+var file_gcsdk_gcmessages_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_gcsdk_gcmessages_proto_msgTypes = make([]protoimpl.MessageInfo, 50)
 var file_gcsdk_gcmessages_proto_goTypes = []any{
 	(GCClientLauncherType)(0),                                                        // 0: GCClientLauncherType
 	(GCConnectionStatus)(0),                                                          // 1: GCConnectionStatus
-	(ESteamPaymentRuleType)(0),                                                       // 2: ESteamPaymentRuleType
-	(*CMsgSOIDOwner)(nil),                                                            // 3: CMsgSOIDOwner
-	(*CMsgSOSingleObject)(nil),                                                       // 4: CMsgSOSingleObject
-	(*CMsgSOMultipleObjects)(nil),                                                    // 5: CMsgSOMultipleObjects
-	(*CMsgSOCacheSubscribed)(nil),                                                    // 6: CMsgSOCacheSubscribed
-	(*CMsgSOCacheUnsubscribed)(nil),                                                  // 7: CMsgSOCacheUnsubscribed
-	(*CMsgSOCacheSubscriptionCheck)(nil),                                             // 8: CMsgSOCacheSubscriptionCheck
-	(*CMsgSOCacheSubscriptionRefresh)(nil),                                           // 9: CMsgSOCacheSubscriptionRefresh
-	(*CMsgSOCacheVersion)(nil),                                                       // 10: CMsgSOCacheVersion
-	(*CMsgAccountDetails)(nil),                                                       // 11: CMsgAccountDetails
-	(*CMsgGCMultiplexMessage)(nil),                                                   // 12: CMsgGCMultiplexMessage
-	(*CMsgGCMultiplexMessage_Response)(nil),                                          // 13: CMsgGCMultiplexMessage_Response
-	(*CGCToGCMsgMasterAck)(nil),                                                      // 14: CGCToGCMsgMasterAck
-	(*CGCToGCMsgMasterAck_Response)(nil),                                             // 15: CGCToGCMsgMasterAck_Response
-	(*CGCToGCMsgMasterStartupComplete)(nil),                                          // 16: CGCToGCMsgMasterStartupComplete
-	(*CGCToGCMsgRouted)(nil),                                                         // 17: CGCToGCMsgRouted
-	(*CGCToGCMsgRoutedReply)(nil),                                                    // 18: CGCToGCMsgRoutedReply
-	(*CMsgGCUpdateSessionIP)(nil),                                                    // 19: CMsgGCUpdateSessionIP
-	(*CMsgGCRequestSessionIP)(nil),                                                   // 20: CMsgGCRequestSessionIP
-	(*CMsgGCRequestSessionIPResponse)(nil),                                           // 21: CMsgGCRequestSessionIPResponse
-	(*CMsgSOCacheHaveVersion)(nil),                                                   // 22: CMsgSOCacheHaveVersion
-	(*CMsgClientHelloGC)(nil),                                                        // 23: CMsgClientHelloGC
-	(*CMsgServerHello)(nil),                                                          // 24: CMsgServerHello
-	(*CMsgClientWelcome)(nil),                                                        // 25: CMsgClientWelcome
-	(*CMsgConnectionStatus)(nil),                                                     // 26: CMsgConnectionStatus
-	(*CWorkshop_PopulateItemDescriptions_Request)(nil),                               // 27: CWorkshop_PopulateItemDescriptions_Request
-	(*CWorkshop_GetContributors_Request)(nil),                                        // 28: CWorkshop_GetContributors_Request
-	(*CWorkshop_GetContributors_Response)(nil),                                       // 29: CWorkshop_GetContributors_Response
-	(*CWorkshop_SetItemPaymentRules_Request)(nil),                                    // 30: CWorkshop_SetItemPaymentRules_Request
-	(*CWorkshop_SetItemPaymentRules_Response)(nil),                                   // 31: CWorkshop_SetItemPaymentRules_Response
-	(*CGameServers_AggregationQuery_Request)(nil),                                    // 32: CGameServers_AggregationQuery_Request
-	(*CGameServers_AggregationQuery_Response)(nil),                                   // 33: CGameServers_AggregationQuery_Response
-	(*CWorkshop_AddSpecialPayment_Request)(nil),                                      // 34: CWorkshop_AddSpecialPayment_Request
-	(*CWorkshop_AddSpecialPayment_Response)(nil),                                     // 35: CWorkshop_AddSpecialPayment_Response
-	(*CProductInfo_SetRichPresenceLocalization_Request)(nil),                         // 36: CProductInfo_SetRichPresenceLocalization_Request
-	(*CProductInfo_SetRichPresenceLocalization_Response)(nil),                        // 37: CProductInfo_SetRichPresenceLocalization_Response
+	(*CMsgSOIDOwner)(nil),                                                            // 2: CMsgSOIDOwner
+	(*CMsgSOSingleObject)(nil),                                                       // 3: CMsgSOSingleObject
+	(*CMsgSOMultipleObjects)(nil),                                                    // 4: CMsgSOMultipleObjects
+	(*CMsgSOCacheSubscribed)(nil),                                                    // 5: CMsgSOCacheSubscribed
+	(*CMsgSOCacheUnsubscribed)(nil),                                                  // 6: CMsgSOCacheUnsubscribed
+	(*CMsgSOCacheSubscriptionCheck)(nil),                                             // 7: CMsgSOCacheSubscriptionCheck
+	(*CMsgSOCacheSubscriptionRefresh)(nil),                                           // 8: CMsgSOCacheSubscriptionRefresh
+	(*CMsgSOCacheVersion)(nil),                                                       // 9: CMsgSOCacheVersion
+	(*CMsgAccountDetails)(nil),                                                       // 10: CMsgAccountDetails
+	(*CMsgGCMultiplexMessage)(nil),                                                   // 11: CMsgGCMultiplexMessage
+	(*CMsgGCMultiplexMessage_Response)(nil),                                          // 12: CMsgGCMultiplexMessage_Response
+	(*CGCToGCMsgMasterAck)(nil),                                                      // 13: CGCToGCMsgMasterAck
+	(*CGCToGCMsgMasterAck_Response)(nil),                                             // 14: CGCToGCMsgMasterAck_Response
+	(*CGCToGCMsgMasterStartupComplete)(nil),                                          // 15: CGCToGCMsgMasterStartupComplete
+	(*CGCToGCMsgRouted)(nil),                                                         // 16: CGCToGCMsgRouted
+	(*CGCToGCMsgRoutedReply)(nil),                                                    // 17: CGCToGCMsgRoutedReply
+	(*CMsgGCUpdateSessionIP)(nil),                                                    // 18: CMsgGCUpdateSessionIP
+	(*CMsgGCRequestSessionIP)(nil),                                                   // 19: CMsgGCRequestSessionIP
+	(*CMsgGCRequestSessionIPResponse)(nil),                                           // 20: CMsgGCRequestSessionIPResponse
+	(*CMsgSOCacheHaveVersion)(nil),                                                   // 21: CMsgSOCacheHaveVersion
+	(*CMsgClientHello)(nil),                                                          // 22: CMsgClientHello
+	(*CMsgServerHello)(nil),                                                          // 23: CMsgServerHello
+	(*CMsgClientWelcome)(nil),                                                        // 24: CMsgClientWelcome
+	(*CMsgConnectionStatus)(nil),                                                     // 25: CMsgConnectionStatus
+	(*CWorkshop_PopulateItemDescriptions_Request)(nil),                               // 26: CWorkshop_PopulateItemDescriptions_Request
+	(*CWorkshop_GetContributors_Request)(nil),                                        // 27: CWorkshop_GetContributors_Request
+	(*CWorkshop_GetContributors_Response)(nil),                                       // 28: CWorkshop_GetContributors_Response
+	(*CWorkshop_SetItemPaymentRules_Request)(nil),                                    // 29: CWorkshop_SetItemPaymentRules_Request
+	(*CWorkshop_SetItemPaymentRules_Response)(nil),                                   // 30: CWorkshop_SetItemPaymentRules_Response
+	(*CGameServers_AggregationQuery_Request)(nil),                                    // 31: CGameServers_AggregationQuery_Request
+	(*CGameServers_AggregationQuery_Response)(nil),                                   // 32: CGameServers_AggregationQuery_Response
+	(*CWorkshop_AddSpecialPayment_Request)(nil),                                      // 33: CWorkshop_AddSpecialPayment_Request
+	(*CWorkshop_AddSpecialPayment_Response)(nil),                                     // 34: CWorkshop_AddSpecialPayment_Response
+	(*CProductInfo_SetRichPresenceLocalization_Request)(nil),                         // 35: CProductInfo_SetRichPresenceLocalization_Request
+	(*CProductInfo_SetRichPresenceLocalization_Response)(nil),                        // 36: CProductInfo_SetRichPresenceLocalization_Response
+	(*CMsgSerializedSOCache)(nil),                                                    // 37: CMsgSerializedSOCache
 	(*CMsgSOMultipleObjects_SingleObject)(nil),                                       // 38: CMsgSOMultipleObjects.SingleObject
 	(*CMsgSOCacheSubscribed_SubscribedType)(nil),                                     // 39: CMsgSOCacheSubscribed.SubscribedType
 	(*CMsgClientWelcome_Location)(nil),                                               // 40: CMsgClientWelcome.Location
 	(*CWorkshop_PopulateItemDescriptions_Request_SingleItemDescription)(nil),         // 41: CWorkshop_PopulateItemDescriptions_Request.SingleItemDescription
 	(*CWorkshop_PopulateItemDescriptions_Request_ItemDescriptionsLanguageBlock)(nil), // 42: CWorkshop_PopulateItemDescriptions_Request.ItemDescriptionsLanguageBlock
 	(*CWorkshop_SetItemPaymentRules_Request_WorkshopItemPaymentRule)(nil),            // 43: CWorkshop_SetItemPaymentRules_Request.WorkshopItemPaymentRule
-	(*CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule)(nil),             // 44: CWorkshop_SetItemPaymentRules_Request.PartnerItemPaymentRule
-	(*CGameServers_AggregationQuery_Response_Group)(nil),                             // 45: CGameServers_AggregationQuery_Response.Group
-	(*CProductInfo_SetRichPresenceLocalization_Request_Token)(nil),                   // 46: CProductInfo_SetRichPresenceLocalization_Request.Token
-	(*CProductInfo_SetRichPresenceLocalization_Request_LanguageSection)(nil),         // 47: CProductInfo_SetRichPresenceLocalization_Request.LanguageSection
+	(*CWorkshop_SetItemPaymentRules_Request_WorkshopDirectPaymentRule)(nil),          // 44: CWorkshop_SetItemPaymentRules_Request.WorkshopDirectPaymentRule
+	(*CWorkshop_SetItemPaymentRules_Request_PartnerItemPaymentRule)(nil),             // 45: CWorkshop_SetItemPaymentRules_Request.PartnerItemPaymentRule
+	(*CGameServers_AggregationQuery_Response_Group)(nil),                             // 46: CGameServers_AggregationQuery_Response.Group
+	(*CProductInfo_SetRichPresenceLocalization_Request_Token)(nil),                   // 47: CProductInfo_SetRichPresenceLocalization_Request.Token
+	(*CProductInfo_SetRichPresenceLocalization_Request_LanguageSection)(nil),         // 48: CProductInfo_SetRichPresenceLocalization_Request.LanguageSection
+	(*CMsgSerializedSOCache_TypeCache)(nil),                                          // 49: CMsgSerializedSOCache.TypeCache
+	(*CMsgSerializedSOCache_Cache)(nil),                                              // 50: CMsgSerializedSOCache.Cache
+	(*CMsgSerializedSOCache_Cache_Version)(nil),                                      // 51: CMsgSerializedSOCache.Cache.Version
 }
 var file_gcsdk_gcmessages_proto_depIdxs = []int32{
-	3,  // 0: CMsgSOSingleObject.owner_soid:type_name -> CMsgSOIDOwner
+	2,  // 0: CMsgSOSingleObject.owner_soid:type_name -> CMsgSOIDOwner
 	38, // 1: CMsgSOMultipleObjects.objects_modified:type_name -> CMsgSOMultipleObjects.SingleObject
-	3,  // 2: CMsgSOMultipleObjects.owner_soid:type_name -> CMsgSOIDOwner
+	2,  // 2: CMsgSOMultipleObjects.owner_soid:type_name -> CMsgSOIDOwner
 	39, // 3: CMsgSOCacheSubscribed.objects:type_name -> CMsgSOCacheSubscribed.SubscribedType
-	3,  // 4: CMsgSOCacheSubscribed.owner_soid:type_name -> CMsgSOIDOwner
-	3,  // 5: CMsgSOCacheUnsubscribed.owner_soid:type_name -> CMsgSOIDOwner
-	3,  // 6: CMsgSOCacheSubscriptionCheck.owner_soid:type_name -> CMsgSOIDOwner
-	3,  // 7: CMsgSOCacheSubscriptionRefresh.owner_soid:type_name -> CMsgSOIDOwner
-	3,  // 8: CMsgSOCacheHaveVersion.soid:type_name -> CMsgSOIDOwner
-	22, // 9: CMsgClientHelloGC.socache_have_versions:type_name -> CMsgSOCacheHaveVersion
-	22, // 10: CMsgServerHello.socache_have_versions:type_name -> CMsgSOCacheHaveVersion
-	6,  // 11: CMsgClientWelcome.outofdate_subscribed_caches:type_name -> CMsgSOCacheSubscribed
-	8,  // 12: CMsgClientWelcome.uptodate_subscribed_caches:type_name -> CMsgSOCacheSubscriptionCheck
+	2,  // 4: CMsgSOCacheSubscribed.owner_soid:type_name -> CMsgSOIDOwner
+	2,  // 5: CMsgSOCacheUnsubscribed.owner_soid:type_name -> CMsgSOIDOwner
+	2,  // 6: CMsgSOCacheSubscriptionCheck.owner_soid:type_name -> CMsgSOIDOwner
+	2,  // 7: CMsgSOCacheSubscriptionRefresh.owner_soid:type_name -> CMsgSOIDOwner
+	2,  // 8: CMsgSOCacheHaveVersion.soid:type_name -> CMsgSOIDOwner
+	21, // 9: CMsgClientHello.socache_have_versions:type_name -> CMsgSOCacheHaveVersion
+	21, // 10: CMsgServerHello.socache_have_versions:type_name -> CMsgSOCacheHaveVersion
+	5,  // 11: CMsgClientWelcome.outofdate_subscribed_caches:type_name -> CMsgSOCacheSubscribed
+	7,  // 12: CMsgClientWelcome.uptodate_subscribed_caches:type_name -> CMsgSOCacheSubscriptionCheck
 	40, // 13: CMsgClientWelcome.location:type_name -> CMsgClientWelcome.Location
 	1,  // 14: CMsgConnectionStatus.status:type_name -> GCConnectionStatus
 	42, // 15: CWorkshop_PopulateItemDescriptions_Request.languages:type_name -> CWorkshop_PopulateItemDescriptions_Request.ItemDescriptionsLanguageBlock
 	43, // 16: CWorkshop_SetItemPaymentRules_Request.associated_workshop_files:type_name -> CWorkshop_SetItemPaymentRules_Request.WorkshopItemPaymentRule
-	44, // 17: CWorkshop_SetItemPaymentRules_Request.partner_accounts:type_name -> CWorkshop_SetItemPaymentRules_Request.PartnerItemPaymentRule
-	45, // 18: CGameServers_AggregationQuery_Response.groups:type_name -> CGameServers_AggregationQuery_Response.Group
-	47, // 19: CProductInfo_SetRichPresenceLocalization_Request.languages:type_name -> CProductInfo_SetRichPresenceLocalization_Request.LanguageSection
-	41, // 20: CWorkshop_PopulateItemDescriptions_Request.ItemDescriptionsLanguageBlock.descriptions:type_name -> CWorkshop_PopulateItemDescriptions_Request.SingleItemDescription
-	46, // 21: CProductInfo_SetRichPresenceLocalization_Request.LanguageSection.tokens:type_name -> CProductInfo_SetRichPresenceLocalization_Request.Token
-	22, // [22:22] is the sub-list for method output_type
-	22, // [22:22] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	45, // 17: CWorkshop_SetItemPaymentRules_Request.partner_accounts:type_name -> CWorkshop_SetItemPaymentRules_Request.PartnerItemPaymentRule
+	44, // 18: CWorkshop_SetItemPaymentRules_Request.associated_workshop_file_for_direct_payments:type_name -> CWorkshop_SetItemPaymentRules_Request.WorkshopDirectPaymentRule
+	46, // 19: CGameServers_AggregationQuery_Response.groups:type_name -> CGameServers_AggregationQuery_Response.Group
+	48, // 20: CProductInfo_SetRichPresenceLocalization_Request.languages:type_name -> CProductInfo_SetRichPresenceLocalization_Request.LanguageSection
+	50, // 21: CMsgSerializedSOCache.caches:type_name -> CMsgSerializedSOCache.Cache
+	41, // 22: CWorkshop_PopulateItemDescriptions_Request.ItemDescriptionsLanguageBlock.descriptions:type_name -> CWorkshop_PopulateItemDescriptions_Request.SingleItemDescription
+	47, // 23: CProductInfo_SetRichPresenceLocalization_Request.LanguageSection.tokens:type_name -> CProductInfo_SetRichPresenceLocalization_Request.Token
+	51, // 24: CMsgSerializedSOCache.Cache.versions:type_name -> CMsgSerializedSOCache.Cache.Version
+	49, // 25: CMsgSerializedSOCache.Cache.type_caches:type_name -> CMsgSerializedSOCache.TypeCache
+	26, // [26:26] is the sub-list for method output_type
+	26, // [26:26] is the sub-list for method input_type
+	26, // [26:26] is the sub-list for extension type_name
+	26, // [26:26] is the sub-list for extension extendee
+	0,  // [0:26] is the sub-list for field type_name
 }
 
 func init() { file_gcsdk_gcmessages_proto_init() }
@@ -3286,8 +3580,8 @@ func file_gcsdk_gcmessages_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_gcsdk_gcmessages_proto_rawDesc), len(file_gcsdk_gcmessages_proto_rawDesc)),
-			NumEnums:      3,
-			NumMessages:   45,
+			NumEnums:      2,
+			NumMessages:   50,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
