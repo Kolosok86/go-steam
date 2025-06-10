@@ -34,11 +34,12 @@ type Client struct {
 	steamId      uint64
 	currentJobId uint64
 
-	Auth          *Auth
-	Social        *Social
-	Web           *Web
-	Notifications *Notifications
-	GC            *GameCoordinator
+	Auth           *Auth
+	Social         *Social
+	Web            *Web
+	Notifications  *Notifications
+	GC             *GameCoordinator
+	LocalIpAddress *net.TCPAddr
 
 	events        chan interface{}
 	handlers      []PacketHandler
@@ -87,6 +88,16 @@ func NewClient() *Client {
 // It is never closed.
 func (c *Client) Events() <-chan interface{} {
 	return c.events
+}
+
+func (c *Client) SetIpAddress(ipAddress string) error {
+	addr := netutil.ParsePortAddr(ipAddress)
+	if addr == nil {
+		return fmt.Errorf("invalid IP address format: %s: %w", ipAddress)
+	}
+
+	c.LocalIpAddress = addr.ToTCPAddr()
+	return nil
 }
 
 func (c *Client) Emit(event interface{}) {
@@ -155,7 +166,7 @@ func (c *Client) Connect() (*netutil.PortAddr, error) {
 // You may want to use one of the `GetRandom*CM()` functions in this package.
 // If this client is already connected, it is disconnected first.
 func (c *Client) ConnectTo(addr *netutil.PortAddr) error {
-	return c.ConnectToBind(addr, nil)
+	return c.ConnectToBind(addr, c.LocalIpAddress)
 }
 
 // Connects to a specific server, and binds to a specified local IP
