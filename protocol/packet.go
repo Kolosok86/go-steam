@@ -17,7 +17,7 @@ type Packet struct {
 	IsProto       bool
 	TargetJobId   JobId
 	SourceJobId   JobId
-	EResult       *steamlang.EMsg
+	EResult       *steamlang.EResult
 	EErrorMessage *EErrorMessage
 	Data          []byte
 }
@@ -52,7 +52,7 @@ func NewPacket(data []byte) (*Packet, error) {
 			return nil, err
 		}
 
-		eresult := steamlang.EMsg(header.Proto.GetEresult())
+		eresult := steamlang.EResult(header.Proto.GetEresult())
 		eerrmsg := EErrorMessage(header.Proto.GetErrorMessage())
 
 		return &Packet{
