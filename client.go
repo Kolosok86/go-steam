@@ -349,8 +349,8 @@ func (c *Client) handlePacket(packet *protocol.Packet) {
 }
 
 func (c *Client) handleServiceMethodResponse(packet *protocol.Packet) {
-	c.jobHandlersMutex.RLock()
-	defer c.jobHandlersMutex.RUnlock()
+	c.jobHandlersMutex.Lock()
+	defer c.jobHandlersMutex.Unlock()
 
 	if ch, ok := c.jobHandlers[packet.TargetJobId]; ok {
 		ch <- packet
