@@ -10,6 +10,9 @@ import (
 )
 
 type JobId uint64
+type TargetJobName string
+type Realm uint32
+type EErrorMessage string
 
 func (j JobId) String() string {
 	if j == math.MaxUint64 {

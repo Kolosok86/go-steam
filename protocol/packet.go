@@ -13,11 +13,13 @@ import (
 
 // Represents an incoming, partially unread message.
 type Packet struct {
-	EMsg        steamlang.EMsg
-	IsProto     bool
-	TargetJobId JobId
-	SourceJobId JobId
-	Data        []byte
+	EMsg          steamlang.EMsg
+	IsProto       bool
+	TargetJobId   JobId
+	SourceJobId   JobId
+	EResult       *steamlang.EMsg
+	EErrorMessage *EErrorMessage
+	Data          []byte
 }
 
 func NewPacket(data []byte) (*Packet, error) {
@@ -49,12 +51,18 @@ func NewPacket(data []byte) (*Packet, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		eresult := steamlang.EMsg(header.Proto.GetEresult())
+		eerrmsg := EErrorMessage(header.Proto.GetErrorMessage())
+
 		return &Packet{
-			EMsg:        eMsg,
-			IsProto:     true,
-			TargetJobId: JobId(header.Proto.GetJobidTarget()),
-			SourceJobId: JobId(header.Proto.GetJobidSource()),
-			Data:        data,
+			EMsg:          eMsg,
+			IsProto:       true,
+			TargetJobId:   JobId(header.Proto.GetJobidTarget()),
+			SourceJobId:   JobId(header.Proto.GetJobidSource()),
+			EResult:       &eresult,
+			EErrorMessage: &eerrmsg,
+			Data:          data,
 		}, nil
 	} else {
 		header := steamlang.NewExtendedClientMsgHdr()

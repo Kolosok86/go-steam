@@ -19,6 +19,7 @@ import (
 	"github.com/kolosok86/go-steam/protocol/protobuf"
 	"github.com/kolosok86/go-steam/protocol/steamlang"
 	"github.com/kolosok86/go-steam/steamid"
+	"google.golang.org/protobuf/proto"
 )
 
 // Represents a client to the Steam network.
@@ -45,7 +46,9 @@ type Client struct {
 	handlers      []PacketHandler
 	handlersMutex sync.RWMutex
 
-	tempSessionKey []byte
+	jobHandlersMutex sync.RWMutex
+	jobHandlers      map[protocol.JobId]chan *protocol.Packet
+	tempSessionKey   []byte
 
 	ConnectionTimeout time.Duration
 
@@ -62,8 +65,9 @@ type PacketHandler interface {
 
 func NewClient() *Client {
 	client := &Client{
-		events:   make(chan interface{}, 3),
-		writeBuf: new(bytes.Buffer),
+		events:      make(chan interface{}, 3),
+		writeBuf:    new(bytes.Buffer),
+		jobHandlers: make(map[protocol.JobId]chan *protocol.Packet),
 	}
 
 	client.Auth = &Auth{client: client}
@@ -229,6 +233,36 @@ func (c *Client) Write(msg protocol.IMsg) {
 	c.writeChan <- msg
 }
 
+// WriteUnified sends a unified message and returns a packet with a 10 second timeout
+func (c *Client) WriteUnified(service string, body proto.Message) (*protocol.Packet, error) {
+	msg := protocol.NewClientMsgProtobuf(steamlang.EMsg_ServiceMethodCallFromClient, body)
+
+	msg.Header.Proto.TargetJobName = &service
+	jobID := c.GetNextJobId()
+	msg.SetSourceJobId(jobID)
+
+	ch := make(chan *protocol.Packet, 1)
+
+	c.jobHandlersMutex.Lock()
+	c.jobHandlers[protocol.JobId(jobID)] = ch
+	c.jobHandlersMutex.Unlock()
+
+	c.Write(msg)
+
+	timeout := time.NewTimer(10 * time.Second)
+	defer timeout.Stop()
+
+	select {
+	case packet := <-ch:
+		return packet, nil
+	case <-timeout.C:
+		c.jobHandlersMutex.Lock()
+		delete(c.jobHandlers, protocol.JobId(jobID))
+		c.jobHandlersMutex.Unlock()
+		return nil, fmt.Errorf("timeout: no response received within 15 seconds")
+	}
+}
+
 func (c *Client) readLoop() {
 	for {
 		// This *should* be atomic on most platforms, but the Go spec doesn't guarantee it
@@ -303,12 +337,24 @@ func (c *Client) handlePacket(packet *protocol.Packet) {
 		c.handleChannelEncryptResult(packet)
 	case steamlang.EMsg_Multi:
 		c.handleMulti(packet)
+	case steamlang.EMsg_ServiceMethodResponse:
+		c.handleServiceMethodResponse(packet)
 	}
 
 	c.handlersMutex.RLock()
 	defer c.handlersMutex.RUnlock()
 	for _, handler := range c.handlers {
 		handler.HandlePacket(packet)
+	}
+}
+
+func (c *Client) handleServiceMethodResponse(packet *protocol.Packet) {
+	c.jobHandlersMutex.RLock()
+	defer c.jobHandlersMutex.RUnlock()
+
+	if ch, ok := c.jobHandlers[packet.TargetJobId]; ok {
+		ch <- packet
+		delete(c.jobHandlers, packet.TargetJobId)
 	}
 }
 
@@ -382,13 +428,4 @@ func (c *Client) handleMulti(packet *protocol.Packet) {
 		}
 		c.handlePacket(p)
 	}
-}
-
-func readIp(ip uint32) net.IP {
-	r := make(net.IP, 4)
-	r[3] = byte(ip)
-	r[2] = byte(ip >> 8)
-	r[1] = byte(ip >> 16)
-	r[0] = byte(ip >> 24)
-	return r
 }

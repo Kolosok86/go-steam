@@ -107,6 +107,7 @@ var clientProtoFiles = map[string]string{
 	"steammessages_clientserver_friends.proto": "client_server_friends.pb.go",
 	"steammessages_clientserver_login.proto":   "client_server_login.pb.go",
 	"steammessages_sitelicenseclient.proto":    "client_site_license.pb.go",
+	"steammessages_econ.steamclient.proto":     "client_econ.pb.go",
 
 	"content_manifest.proto": "content_manifest.pb.go",
 

@@ -85,6 +85,22 @@ func (c *ClientMsgProtobuf) SetSourceJobId(job JobId) {
 	c.Header.Proto.JobidSource = proto.Uint64(uint64(job))
 }
 
+func (c *ClientMsgProtobuf) GetTargetJobName() TargetJobName {
+	return TargetJobName(c.Header.Proto.GetTargetJobName())
+}
+
+func (c *ClientMsgProtobuf) SetTargetJobName(name TargetJobName) {
+	c.Header.Proto.TargetJobName = (*string)(&name)
+}
+
+func (c *ClientMsgProtobuf) GetRealm() Realm {
+	return Realm(c.Header.Proto.GetRealm())
+}
+
+func (c *ClientMsgProtobuf) SetRealm(realm Realm) {
+	c.Header.Proto.Realm = (*uint32)(&realm)
+}
+
 func (c *ClientMsgProtobuf) Serialize(w io.Writer) error {
 	err := c.Header.Serialize(w)
 	if err != nil {
