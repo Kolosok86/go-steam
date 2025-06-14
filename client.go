@@ -9,6 +9,7 @@ import (
 	"hash/crc32"
 	"io"
 	"net"
+	"net/url"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -19,6 +20,7 @@ import (
 	"github.com/kolosok86/go-steam/protocol/protobuf"
 	"github.com/kolosok86/go-steam/protocol/steamlang"
 	"github.com/kolosok86/go-steam/steamid"
+	"golang.org/x/net/proxy"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -41,6 +43,7 @@ type Client struct {
 	Notifications  *Notifications
 	GC             *GameCoordinator
 	LocalIpAddress *net.TCPAddr
+	Proxy          proxy.Dialer
 
 	events        chan interface{}
 	handlers      []PacketHandler
@@ -94,6 +97,7 @@ func (c *Client) Events() <-chan interface{} {
 	return c.events
 }
 
+// SetIpAddress sets the local IP address to use for the connection.
 func (c *Client) SetIpAddress(ipAddress string) error {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
@@ -107,6 +111,22 @@ func (c *Client) SetIpAddress(ipAddress string) error {
 		IP: addr.IP,
 	}
 
+	return nil
+}
+
+// SetProxy sets the proxy to use for the connection.
+func (c *Client) SetProxy(address string) error {
+	url, err := url.Parse(address)
+	if err != nil {
+		return fmt.Errorf("invalid proxy format: %s", address)
+	}
+
+	proxy, err := proxy.FromURL(url, nil)
+	if err != nil {
+		return fmt.Errorf("invalid proxy format: %s", address)
+	}
+
+	c.Proxy = proxy
 	return nil
 }
 
@@ -184,7 +204,7 @@ func (c *Client) ConnectTo(addr *netutil.PortAddr) error {
 func (c *Client) ConnectToBind(addr *netutil.PortAddr, local *net.TCPAddr) error {
 	c.Disconnect()
 
-	conn, err := dialTCP(local, addr.ToTCPAddr())
+	conn, err := dialTCP(local, addr.ToTCPAddr(), c.Proxy)
 	if err != nil {
 		c.Fatalf("Connect failed: %v", err)
 		return err

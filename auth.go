@@ -12,8 +12,7 @@ import (
 )
 
 type Auth struct {
-	client  *Client
-	details *LogOnDetails
+	client *Client
 }
 
 type LogOnDetails struct {
