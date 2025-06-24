@@ -594,21 +594,3 @@ func (s *Social) handleProfileInfoResponse(packet *protocol.Packet) {
 		Summary:     body.GetSummary(),
 	})
 }
-
-func (s *Social) handleFriendMessageHistoryResponse(packet *protocol.Packet) {
-	body := new(protobuf.CMsgClientChatGetFriendMessageHistoryResponse)
-	packet.ReadProtoMsg(body)
-	steamid := steamid.SteamId(body.GetSteamid())
-	for _, message := range body.GetMessages() {
-		if !message.GetUnread() {
-			continue // Skip already read messages
-		}
-		s.client.Emit(&ChatMsgEvent{
-			ChatterId: steamid,
-			Message:   message.GetMessage(),
-			EntryType: steamlang.EChatEntryType_ChatMsg,
-			Timestamp: time.Unix(int64(message.GetTimestamp()), 0),
-			Offline:   true, // GetUnread is true
-		})
-	}
-}

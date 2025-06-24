@@ -55,11 +55,12 @@ type Client struct {
 
 	ConnectionTimeout time.Duration
 
-	mutex     sync.RWMutex // guarding conn and writeChan
-	conn      connection
-	writeChan chan protocol.IMsg
-	writeBuf  *bytes.Buffer
-	heartbeat *time.Ticker
+	mutex          sync.RWMutex // guarding conn and writeChan
+	conn           connection
+	writeChan      chan protocol.IMsg
+	writeBuf       *bytes.Buffer
+	heartbeat      chan struct{}
+	heartbeatMutex sync.Mutex // guarding heartbeat channel
 }
 
 type PacketHandler interface {
@@ -219,6 +220,22 @@ func (c *Client) ConnectToBind(addr *netutil.PortAddr, local *net.TCPAddr) error
 }
 
 func (c *Client) Disconnect() {
+	// stop heartbeat before locking the main mutex
+	c.heartbeatMutex.Lock()
+	if c.heartbeat != nil {
+		close(c.heartbeat)
+		c.heartbeat = nil
+	}
+	c.heartbeatMutex.Unlock()
+
+	// clear all pending job handlers on disconnect
+	c.jobHandlersMutex.Lock()
+	for jobID, ch := range c.jobHandlers {
+		close(ch)
+		delete(c.jobHandlers, jobID)
+	}
+	c.jobHandlersMutex.Unlock()
+
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
@@ -228,18 +245,8 @@ func (c *Client) Disconnect() {
 
 	c.conn.Close()
 	c.conn = nil
-	if c.heartbeat != nil {
-		c.heartbeat.Stop()
-	}
-	close(c.writeChan)
 
-	// clear all pending job handlers on disconnect
-	c.jobHandlersMutex.Lock()
-	for jobID, ch := range c.jobHandlers {
-		close(ch)
-		delete(c.jobHandlers, jobID)
-	}
-	c.jobHandlersMutex.Unlock()
+	close(c.writeChan)
 
 	c.Emit(&DisconnectedEvent{})
 }
@@ -344,18 +351,27 @@ func (c *Client) writeLoop() {
 }
 
 func (c *Client) heartbeatLoop(seconds time.Duration) {
+	c.heartbeatMutex.Lock()
+	// stop previous heartbeat if it exists
 	if c.heartbeat != nil {
-		c.heartbeat.Stop()
+		close(c.heartbeat)
 	}
-	c.heartbeat = time.NewTicker(seconds * time.Second)
+
+	c.heartbeat = make(chan struct{})
+	heartbeatChan := c.heartbeat
+	c.heartbeatMutex.Unlock()
+
+	ticker := time.NewTicker(seconds * time.Second)
+	defer ticker.Stop()
+
 	for {
-		_, ok := <-c.heartbeat.C
-		if !ok {
-			break
+		select {
+		case <-ticker.C:
+			c.Write(protocol.NewClientMsgProtobuf(steamlang.EMsg_ClientHeartBeat, new(protobuf.CMsgClientHeartBeat)))
+		case <-heartbeatChan:
+			return
 		}
-		c.Write(protocol.NewClientMsgProtobuf(steamlang.EMsg_ClientHeartBeat, new(protobuf.CMsgClientHeartBeat)))
 	}
-	c.heartbeat = nil
 }
 
 func (c *Client) handlePacket(packet *protocol.Packet) {
@@ -399,7 +415,7 @@ func (c *Client) handleChannelEncryptRequest(packet *protocol.Packet) {
 	packet.ReadMsg(body)
 
 	if body.Universe != steamlang.EUniverse_Public {
-		c.Fatalf("Invalid univserse %v!", body.Universe)
+		c.Fatalf("Invalid universe %v!", body.Universe)
 	}
 
 	c.tempSessionKey = make([]byte, 32)
