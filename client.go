@@ -232,8 +232,16 @@ func (c *Client) Disconnect() {
 		c.heartbeat.Stop()
 	}
 	close(c.writeChan)
-	c.Emit(&DisconnectedEvent{})
 
+	// clear all pending job handlers on disconnect
+	c.jobHandlersMutex.Lock()
+	for jobID, ch := range c.jobHandlers {
+		close(ch)
+		delete(c.jobHandlers, jobID)
+	}
+	c.jobHandlersMutex.Unlock()
+
+	c.Emit(&DisconnectedEvent{})
 }
 
 // Adds a message to the send queue. Modifications to the given message after
@@ -269,17 +277,18 @@ func (c *Client) WriteUnified(service string, body proto.Message) (*protocol.Pac
 
 	c.Write(msg)
 
-	timeout := time.NewTimer(10 * time.Second)
-	defer timeout.Stop()
-
 	select {
 	case packet := <-ch:
-		return packet, nil
-	case <-timeout.C:
+		// check if handler still exists before deleting
 		c.jobHandlersMutex.Lock()
 		delete(c.jobHandlers, protocol.JobId(jobID))
 		c.jobHandlersMutex.Unlock()
-		return nil, fmt.Errorf("timeout: no response received within 15 seconds")
+		return packet, nil
+	case <-time.After(time.Second * 10):
+		c.jobHandlersMutex.Lock()
+		delete(c.jobHandlers, protocol.JobId(jobID))
+		c.jobHandlersMutex.Unlock()
+		return nil, fmt.Errorf("timeout: no response received within 10 seconds")
 	}
 }
 
@@ -373,7 +382,14 @@ func (c *Client) handleServiceMethodResponse(packet *protocol.Packet) {
 	defer c.jobHandlersMutex.Unlock()
 
 	if ch, ok := c.jobHandlers[packet.TargetJobId]; ok {
-		ch <- packet
+		// Use non-blocking send to avoid deadlock
+		select {
+		case ch <- packet:
+			// Successfully sent packet
+		default:
+			// Channel is blocked or closed, just remove handler
+		}
+
 		delete(c.jobHandlers, packet.TargetJobId)
 	}
 }
