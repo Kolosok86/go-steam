@@ -3700,6 +3700,8 @@ const (
 	EResult_PhoneNumberIsVOIP                       EResult = 127
 	EResult_NotSupported                            EResult = 128
 	EResult_FamilySizeLimitExceeded                 EResult = 129
+	EResult_OfflineAppCacheInvalid                  EResult = 130
+	EResult_TryLater                                EResult = 131
 )
 
 var EResult_name = map[EResult]string{
@@ -3832,6 +3834,8 @@ var EResult_name = map[EResult]string{
 	127: "EResult_PhoneNumberIsVOIP",
 	128: "EResult_NotSupported",
 	129: "EResult_FamilySizeLimitExceeded",
+	130: "EResult_OfflineAppCacheInvalid",
+	131: "EResult_TryLater",
 }
 
 func (e EResult) String() string {
@@ -4086,7 +4090,7 @@ const (
 	EAccountFlags_LimitedUser                EAccountFlags = 4096
 	EAccountFlags_LimitedUserForce           EAccountFlags = 8192
 	EAccountFlags_EmailValidated             EAccountFlags = 16384
-	EAccountFlags_MarketingTreatment         EAccountFlags = 32768
+	EAccountFlags_ValveEmail                 EAccountFlags = 32768
 	EAccountFlags_OGGInviteOptOut            EAccountFlags = 65536
 	EAccountFlags_ForcePasswordChange        EAccountFlags = 131072
 	EAccountFlags_ForceEmailVerification     EAccountFlags = 262144
@@ -4121,7 +4125,7 @@ var EAccountFlags_name = map[EAccountFlags]string{
 	4096:       "EAccountFlags_LimitedUser",
 	8192:       "EAccountFlags_LimitedUserForce",
 	16384:      "EAccountFlags_EmailValidated",
-	32768:      "EAccountFlags_MarketingTreatment",
+	32768:      "EAccountFlags_ValveEmail",
 	65536:      "EAccountFlags_OGGInviteOptOut",
 	131072:     "EAccountFlags_ForcePasswordChange",
 	262144:     "EAccountFlags_ForceEmailVerification",
@@ -5674,23 +5678,37 @@ func (e EContentDownloadSourceType) String() string {
 type EPlatformType int32
 
 const (
-	EPlatformType_Unknown EPlatformType = 0
-	EPlatformType_Win32   EPlatformType = 1
-	EPlatformType_Win64   EPlatformType = 2
-	EPlatformType_Linux64 EPlatformType = 3
-	EPlatformType_OSX     EPlatformType = 4
-	EPlatformType_PS3     EPlatformType = 5
-	EPlatformType_Linux32 EPlatformType = 6
+	EPlatformType_Unknown        EPlatformType = 0
+	EPlatformType_Win32          EPlatformType = 1
+	EPlatformType_Win64          EPlatformType = 2
+	EPlatformType_Linux64        EPlatformType = 3
+	EPlatformType_OSX            EPlatformType = 4
+	EPlatformType_PS3            EPlatformType = 5
+	EPlatformType_Linux32        EPlatformType = 6
+	EPlatformType_Android32      EPlatformType = 7
+	EPlatformType_Android64      EPlatformType = 8
+	EPlatformType_IOS32          EPlatformType = 9
+	EPlatformType_IOS64          EPlatformType = 10
+	EPlatformType_TVOS           EPlatformType = 11
+	EPlatformType_EmbeddedClient EPlatformType = 12
+	EPlatformType_Browser        EPlatformType = 13
 )
 
 var EPlatformType_name = map[EPlatformType]string{
-	0: "EPlatformType_Unknown",
-	1: "EPlatformType_Win32",
-	2: "EPlatformType_Win64",
-	3: "EPlatformType_Linux",
-	4: "EPlatformType_OSX",
-	5: "EPlatformType_PS3",
-	6: "EPlatformType_Linux32",
+	0:  "EPlatformType_Unknown",
+	1:  "EPlatformType_Win32",
+	2:  "EPlatformType_Win64",
+	3:  "EPlatformType_Linux",
+	4:  "EPlatformType_OSX",
+	5:  "EPlatformType_PS3",
+	6:  "EPlatformType_Linux32",
+	7:  "EPlatformType_Android32",
+	8:  "EPlatformType_Android64",
+	9:  "EPlatformType_IOS32",
+	10: "EPlatformType_IOS64",
+	11: "EPlatformType_TVOS",
+	12: "EPlatformType_EmbeddedClient",
+	13: "EPlatformType_Browser",
 }
 
 func (e EPlatformType) String() string {
@@ -6044,7 +6062,7 @@ const (
 	EServerType_Steam2Emulator      EServerType = 79
 	EServerType_PublicTest          EServerType = 80
 	EServerType_SolrMgr             EServerType = 81
-	EServerType_BroadcastIngestor   EServerType = 82
+	EServerType_BroadcastIngester   EServerType = 82
 	EServerType_BroadcastDirectory  EServerType = 83
 	EServerType_VideoManager        EServerType = 84
 	EServerType_TradeOffer          EServerType = 85
@@ -6178,7 +6196,7 @@ var EServerType_name = map[EServerType]string{
 	79:  "EServerType_Steam2Emulator",
 	80:  "EServerType_PublicTest",
 	81:  "EServerType_SolrMgr",
-	82:  "EServerType_BroadcastIngestor",
+	82:  "EServerType_BroadcastIngester",
 	83:  "EServerType_BroadcastDirectory",
 	84:  "EServerType_VideoManager",
 	85:  "EServerType_TradeOffer",
@@ -6802,7 +6820,7 @@ const (
 	EEconTradeResponse_CyberCafeInitiator                        EEconTradeResponse = 14
 	EEconTradeResponse_CyberCafeTarget                           EEconTradeResponse = 15
 	EEconTradeResponse_SchoolLabInitiator                        EEconTradeResponse = 16
-	EEconTradeResponse_SchoolLabTarget                           EEconTradeResponse = 16
+	EEconTradeResponse_SchoolLabTarget                           EEconTradeResponse = 17
 	EEconTradeResponse_InitiatorBlockedTarget                    EEconTradeResponse = 18
 	EEconTradeResponse_InitiatorNeedsVerifiedEmail               EEconTradeResponse = 20
 	EEconTradeResponse_InitiatorNeedsSteamGuard                  EEconTradeResponse = 21
@@ -6839,6 +6857,7 @@ var EEconTradeResponse_name = map[EEconTradeResponse]string{
 	14: "EEconTradeResponse_CyberCafeInitiator",
 	15: "EEconTradeResponse_CyberCafeTarget",
 	16: "EEconTradeResponse_SchoolLabInitiator",
+	17: "EEconTradeResponse_SchoolLabTarget",
 	18: "EEconTradeResponse_InitiatorBlockedTarget",
 	20: "EEconTradeResponse_InitiatorNeedsVerifiedEmail",
 	21: "EEconTradeResponse_InitiatorNeedsSteamGuard",
@@ -7566,7 +7585,7 @@ const (
 	EDisplayStatus_PresaleOnly      EDisplayStatus = 13
 	EDisplayStatus_InvalidPlatform  EDisplayStatus = 14
 	EDisplayStatus_ParentalBlocked  EDisplayStatus = 15
-	EDisplayStatus_PreloadOnly      EDisplayStatus = 16
+	EDisplayStatus_PreloadComplete  EDisplayStatus = 16
 	EDisplayStatus_BorrowerLocked   EDisplayStatus = 17
 	EDisplayStatus_UpdatePaused     EDisplayStatus = 18
 	EDisplayStatus_UpdateQueued     EDisplayStatus = 19
@@ -7587,6 +7606,9 @@ const (
 	EDisplayStatus_CloudError       EDisplayStatus = 34
 	EDisplayStatus_CloudOutOfDate   EDisplayStatus = 35
 	EDisplayStatus_Terminating      EDisplayStatus = 36
+	EDisplayStatus_OwnerLocked      EDisplayStatus = 37
+	EDisplayStatus_DownloadFailed   EDisplayStatus = 38
+	EDisplayStatus_UpdateFailed     EDisplayStatus = 39
 )
 
 var EDisplayStatus_name = map[EDisplayStatus]string{
@@ -7606,7 +7628,7 @@ var EDisplayStatus_name = map[EDisplayStatus]string{
 	13: "EDisplayStatus_PresaleOnly",
 	14: "EDisplayStatus_InvalidPlatform",
 	15: "EDisplayStatus_ParentalBlocked",
-	16: "EDisplayStatus_PreloadOnly",
+	16: "EDisplayStatus_PreloadComplete",
 	17: "EDisplayStatus_BorrowerLocked",
 	18: "EDisplayStatus_UpdatePaused",
 	19: "EDisplayStatus_UpdateQueued",
@@ -7627,6 +7649,9 @@ var EDisplayStatus_name = map[EDisplayStatus]string{
 	34: "EDisplayStatus_CloudError",
 	35: "EDisplayStatus_CloudOutOfDate",
 	36: "EDisplayStatus_Terminating",
+	37: "EDisplayStatus_OwnerLocked",
+	38: "EDisplayStatus_DownloadFailed",
+	39: "EDisplayStatus_UpdateFailed",
 }
 
 func (e EDisplayStatus) String() string {
@@ -8034,23 +8059,25 @@ const (
 	EVoiceCallState_LocalMicOnly                         EVoiceCallState = 3
 	EVoiceCallState_CreatePeerConnection                 EVoiceCallState = 4
 	EVoiceCallState_InitatedWebRTCSession                EVoiceCallState = 5
-	EVoiceCallState_WebRTCConnectedWaitingOnIceConnected EVoiceCallState = 6
-	EVoiceCallState_RequestedPermission                  EVoiceCallState = 7
-	EVoiceCallState_NotifyingVoiceChatOfWebRTCSession    EVoiceCallState = 8
-	EVoiceCallState_Connected                            EVoiceCallState = 9
+	EVoiceCallState_UpdatingWebRTCSession                EVoiceCallState = 6
+	EVoiceCallState_WebRTCConnectedWaitingOnIceConnected EVoiceCallState = 7
+	EVoiceCallState_RequestedPermission                  EVoiceCallState = 8
+	EVoiceCallState_NotifyingVoiceChatOfWebRTCSession    EVoiceCallState = 9
+	EVoiceCallState_Connected                            EVoiceCallState = 10
 )
 
 var EVoiceCallState_name = map[EVoiceCallState]string{
-	0: "EVoiceCallState_None",
-	1: "EVoiceCallState_ScheduledInitiate",
-	2: "EVoiceCallState_RequestedMicAccess",
-	3: "EVoiceCallState_LocalMicOnly",
-	4: "EVoiceCallState_CreatePeerConnection",
-	5: "EVoiceCallState_InitatedWebRTCSession",
-	6: "EVoiceCallState_WebRTCConnectedWaitingOnIceConnected",
-	7: "EVoiceCallState_RequestedPermission",
-	8: "EVoiceCallState_NotifyingVoiceChatOfWebRTCSession",
-	9: "EVoiceCallState_Connected",
+	0:  "EVoiceCallState_None",
+	1:  "EVoiceCallState_ScheduledInitiate",
+	2:  "EVoiceCallState_RequestedMicAccess",
+	3:  "EVoiceCallState_LocalMicOnly",
+	4:  "EVoiceCallState_CreatePeerConnection",
+	5:  "EVoiceCallState_InitatedWebRTCSession",
+	6:  "EVoiceCallState_UpdatingWebRTCSession",
+	7:  "EVoiceCallState_WebRTCConnectedWaitingOnIceConnected",
+	8:  "EVoiceCallState_RequestedPermission",
+	9:  "EVoiceCallState_NotifyingVoiceChatOfWebRTCSession",
+	10: "EVoiceCallState_Connected",
 }
 
 func (e EVoiceCallState) String() string {
@@ -8084,6 +8111,7 @@ const (
 	ETradeOfferState_CreatedNeedsConfirmation ETradeOfferState = 9
 	ETradeOfferState_CanceledBySecondFactor   ETradeOfferState = 10
 	ETradeOfferState_InEscrow                 ETradeOfferState = 11
+	ETradeOfferState_Reverted                 ETradeOfferState = 12
 )
 
 var ETradeOfferState_name = map[ETradeOfferState]string{
@@ -8098,6 +8126,7 @@ var ETradeOfferState_name = map[ETradeOfferState]string{
 	9:  "ETradeOfferState_CreatedNeedsConfirmation",
 	10: "ETradeOfferState_CanceledBySecondFactor",
 	11: "ETradeOfferState_InEscrow",
+	12: "ETradeOfferState_Reverted",
 }
 
 func (e ETradeOfferState) String() string {
@@ -8434,9 +8463,10 @@ const (
 	EUIMode_Tenfoot        EUIMode = 1
 	EUIMode_Mobile         EUIMode = 2
 	EUIMode_Web            EUIMode = 3
-	EUIMode_ClientUI       EUIMode = 4
+	EUIMode_GamePadUI      EUIMode = 4
 	EUIMode_MobileChat     EUIMode = 5
 	EUIMode_EmbeddedClient EUIMode = 6
+	EUIMode_DesktopUI      EUIMode = 7
 )
 
 var EUIMode_name = map[EUIMode]string{
@@ -8445,9 +8475,10 @@ var EUIMode_name = map[EUIMode]string{
 	1:  "EUIMode_Tenfoot",
 	2:  "EUIMode_Mobile",
 	3:  "EUIMode_Web",
-	4:  "EUIMode_ClientUI",
+	4:  "EUIMode_GamePadUI",
 	5:  "EUIMode_MobileChat",
 	6:  "EUIMode_EmbeddedClient",
+	7:  "EUIMode_DesktopUI",
 }
 
 func (e EUIMode) String() string {
@@ -8456,6 +8487,211 @@ func (e EUIMode) String() string {
 	}
 	var flags []string
 	for k, v := range EUIMode_name {
+		if e&k != 0 {
+			flags = append(flags, v)
+		}
+	}
+	if len(flags) == 0 {
+		return fmt.Sprintf("%d", e)
+	}
+	sort.Strings(flags)
+	return strings.Join(flags, " | ")
+}
+
+type EGamingDeviceType int32
+
+const (
+	EGamingDeviceType_Unknown         EGamingDeviceType = 0
+	EGamingDeviceType_StandardPC      EGamingDeviceType = 1
+	EGamingDeviceType_ConsoleLegacy   EGamingDeviceType = 256
+	EGamingDeviceType_PS3             EGamingDeviceType = 273
+	EGamingDeviceType_Steambox        EGamingDeviceType = 288
+	EGamingDeviceType_Tesla           EGamingDeviceType = 320
+	EGamingDeviceType_Handheld_Legacy EGamingDeviceType = 512
+	EGamingDeviceType_Phone           EGamingDeviceType = 528
+	EGamingDeviceType_Console         EGamingDeviceType = 540
+	EGamingDeviceType_SteamOSGeneric  EGamingDeviceType = 541
+	EGamingDeviceType_SteamDeck       EGamingDeviceType = 544
+	EGamingDeviceType_LegionGoS       EGamingDeviceType = 545
+	EGamingDeviceType_Fremont         EGamingDeviceType = 546
+	EGamingDeviceType_VR              EGamingDeviceType = 768
+	EGamingDeviceType_SteamFrame      EGamingDeviceType = 769
+)
+
+var EGamingDeviceType_name = map[EGamingDeviceType]string{
+	0:   "EGamingDeviceType_Unknown",
+	1:   "EGamingDeviceType_StandardPC",
+	256: "EGamingDeviceType_ConsoleLegacy",
+	273: "EGamingDeviceType_PS3",
+	288: "EGamingDeviceType_Steambox",
+	320: "EGamingDeviceType_Tesla",
+	512: "EGamingDeviceType_Handheld_Legacy",
+	528: "EGamingDeviceType_Phone",
+	540: "EGamingDeviceType_Console",
+	541: "EGamingDeviceType_SteamOSGeneric",
+	544: "EGamingDeviceType_SteamDeck",
+	545: "EGamingDeviceType_LegionGoS",
+	546: "EGamingDeviceType_Fremont",
+	768: "EGamingDeviceType_VR",
+	769: "EGamingDeviceType_SteamFrame",
+}
+
+func (e EGamingDeviceType) String() string {
+	if s, ok := EGamingDeviceType_name[e]; ok {
+		return s
+	}
+	var flags []string
+	for k, v := range EGamingDeviceType_name {
+		if e&k != 0 {
+			flags = append(flags, v)
+		}
+	}
+	if len(flags) == 0 {
+		return fmt.Sprintf("%d", e)
+	}
+	sort.Strings(flags)
+	return strings.Join(flags, " | ")
+}
+
+type EMobileConfirmationAction int32
+
+const (
+	EMobileConfirmationAction_None   EMobileConfirmationAction = 0
+	EMobileConfirmationAction_Allow  EMobileConfirmationAction = 1
+	EMobileConfirmationAction_Cancel EMobileConfirmationAction = 2
+)
+
+var EMobileConfirmationAction_name = map[EMobileConfirmationAction]string{
+	0: "EMobileConfirmationAction_None",
+	1: "EMobileConfirmationAction_Allow",
+	2: "EMobileConfirmationAction_Cancel",
+}
+
+func (e EMobileConfirmationAction) String() string {
+	if s, ok := EMobileConfirmationAction_name[e]; ok {
+		return s
+	}
+	var flags []string
+	for k, v := range EMobileConfirmationAction_name {
+		if e&k != 0 {
+			flags = append(flags, v)
+		}
+	}
+	if len(flags) == 0 {
+		return fmt.Sprintf("%d", e)
+	}
+	sort.Strings(flags)
+	return strings.Join(flags, " | ")
+}
+
+type EMobileConfirmationType int32
+
+const (
+	EMobileConfirmationType_Invalid             EMobileConfirmationType = 0
+	EMobileConfirmationType_Test                EMobileConfirmationType = 1
+	EMobileConfirmationType_Trade               EMobileConfirmationType = 2
+	EMobileConfirmationType_MarketListing       EMobileConfirmationType = 3
+	EMobileConfirmationType_FeatureOptOut       EMobileConfirmationType = 4
+	EMobileConfirmationType_PhoneNumberChange   EMobileConfirmationType = 5
+	EMobileConfirmationType_AccountRecovery     EMobileConfirmationType = 6
+	EMobileConfirmationType_BuildChangeRequest  EMobileConfirmationType = 7
+	EMobileConfirmationType_AddUser             EMobileConfirmationType = 8
+	EMobileConfirmationType_RegisterApiKey      EMobileConfirmationType = 9
+	EMobileConfirmationType_InviteToFamilyGroup EMobileConfirmationType = 10
+	EMobileConfirmationType_JoinFamilyGroup     EMobileConfirmationType = 11
+	EMobileConfirmationType_MarketPurchase      EMobileConfirmationType = 12
+	EMobileConfirmationType_RequestRefund       EMobileConfirmationType = 13
+)
+
+var EMobileConfirmationType_name = map[EMobileConfirmationType]string{
+	0:  "EMobileConfirmationType_Invalid",
+	1:  "EMobileConfirmationType_Test",
+	2:  "EMobileConfirmationType_Trade",
+	3:  "EMobileConfirmationType_MarketListing",
+	4:  "EMobileConfirmationType_FeatureOptOut",
+	5:  "EMobileConfirmationType_PhoneNumberChange",
+	6:  "EMobileConfirmationType_AccountRecovery",
+	7:  "EMobileConfirmationType_BuildChangeRequest",
+	8:  "EMobileConfirmationType_AddUser",
+	9:  "EMobileConfirmationType_RegisterApiKey",
+	10: "EMobileConfirmationType_InviteToFamilyGroup",
+	11: "EMobileConfirmationType_JoinFamilyGroup",
+	12: "EMobileConfirmationType_MarketPurchase",
+	13: "EMobileConfirmationType_RequestRefund",
+}
+
+func (e EMobileConfirmationType) String() string {
+	if s, ok := EMobileConfirmationType_name[e]; ok {
+		return s
+	}
+	var flags []string
+	for k, v := range EMobileConfirmationType_name {
+		if e&k != 0 {
+			flags = append(flags, v)
+		}
+	}
+	if len(flags) == 0 {
+		return fmt.Sprintf("%d", e)
+	}
+	sort.Strings(flags)
+	return strings.Join(flags, " | ")
+}
+
+type ECommentPermission int32
+
+const (
+	ECommentPermission_Invalid     ECommentPermission = -1
+	ECommentPermission_FriendsOnly ECommentPermission = 0
+	ECommentPermission_Anyone      ECommentPermission = 1
+	ECommentPermission_SelfOnly    ECommentPermission = 2
+)
+
+var ECommentPermission_name = map[ECommentPermission]string{
+	-1: "ECommentPermission_Invalid",
+	0:  "ECommentPermission_FriendsOnly",
+	1:  "ECommentPermission_Anyone",
+	2:  "ECommentPermission_SelfOnly",
+}
+
+func (e ECommentPermission) String() string {
+	if s, ok := ECommentPermission_name[e]; ok {
+		return s
+	}
+	var flags []string
+	for k, v := range ECommentPermission_name {
+		if e&k != 0 {
+			flags = append(flags, v)
+		}
+	}
+	if len(flags) == 0 {
+		return fmt.Sprintf("%d", e)
+	}
+	sort.Strings(flags)
+	return strings.Join(flags, " | ")
+}
+
+type ECommunityPrivacy int32
+
+const (
+	ECommunityPrivacy_Invalid     ECommunityPrivacy = 0
+	ECommunityPrivacy_Private     ECommunityPrivacy = 1
+	ECommunityPrivacy_FriendsOnly ECommunityPrivacy = 2
+	ECommunityPrivacy_Public      ECommunityPrivacy = 3
+)
+
+var ECommunityPrivacy_name = map[ECommunityPrivacy]string{
+	0: "ECommunityPrivacy_Invalid",
+	1: "ECommunityPrivacy_Private",
+	2: "ECommunityPrivacy_FriendsOnly",
+	3: "ECommunityPrivacy_Public",
+}
+
+func (e ECommunityPrivacy) String() string {
+	if s, ok := ECommunityPrivacy_name[e]; ok {
+		return s
+	}
+	var flags []string
+	for k, v := range ECommunityPrivacy_name {
 		if e&k != 0 {
 			flags = append(flags, v)
 		}
