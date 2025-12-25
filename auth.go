@@ -148,7 +148,5 @@ func (a *Auth) handleAccountInfo(packet *protocol.Packet) {
 		Country:              body.GetIpCountry(),
 		CountAuthedComputers: body.GetCountAuthedComputers(),
 		AccountFlags:         steamlang.EAccountFlags(body.GetAccountFlags()),
-		FacebookId:           body.GetFacebookId(),
-		FacebookName:         body.GetFacebookName(),
 	})
 }

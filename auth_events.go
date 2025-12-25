@@ -39,6 +39,4 @@ type AccountInfoEvent struct {
 	Country              string
 	CountAuthedComputers int32
 	AccountFlags         steamlang.EAccountFlags
-	FacebookId           uint64 `json:",string"`
-	FacebookName         string
 }
