@@ -1,3 +1,5 @@
+package steam
+
 /*
 This package allows you to automate actions on Valve's Steam network. It is a Go port of SteamKit.
 
@@ -31,8 +33,6 @@ You can also find a running example in the `gsbot` package.
 			switch e := event.(type) {
 			case *steam.ConnectedEvent:
 				client.Auth.LogOn(myLoginInfo)
-			case *steam.MachineAuthUpdateEvent:
-				os.WriteFile("sentry", e.Hash, 0666)
 			case *steam.LoggedOnEvent:
 				client.Social.SetPersonaState(steamlang.EPersonaState_Online)
 			case steam.FatalErrorEvent:
@@ -48,4 +48,3 @@ You can also find a running example in the `gsbot` package.
 go-steam emits events that can be read via Client.Events(). Although the channel has the type interface{},
 only types from this package ending with "Event" and errors will be emitted.
 */
-package steam

@@ -36,7 +36,6 @@ type LogOnDetails struct {
 //	receive an error (EResult_AccountLogonDenied)
 //
 // and Steam will send you an authcode. Then you have to login again, this time with the authcode.
-// Shortly after logging in, you'll receive a MachineAuthUpdateEvent with a hash which allows
 // you to login without using an authcode in the future.
 //
 // If you don't use Steam Guard, username and password are enough.

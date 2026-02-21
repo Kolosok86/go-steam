@@ -117,17 +117,17 @@ func (c *Client) SetIpAddress(ipAddress string) error {
 
 // SetProxy sets the proxy to use for the connection.
 func (c *Client) SetProxy(address string) error {
-	url, err := url.Parse(address)
+	link, err := url.Parse(address)
 	if err != nil {
 		return fmt.Errorf("invalid proxy format: %s", address)
 	}
 
-	proxy, err := proxy.FromURL(url, nil)
+	instance, err := proxy.FromURL(link, nil)
 	if err != nil {
 		return fmt.Errorf("invalid proxy format: %s", address)
 	}
 
-	c.Proxy = proxy
+	c.Proxy = instance
 	return nil
 }
 
@@ -284,14 +284,16 @@ func (c *Client) WriteUnified(service string, body proto.Message) (*protocol.Pac
 
 	c.Write(msg)
 
+	timer := time.NewTimer(10 * time.Second)
+	defer timer.Stop()
+
 	select {
 	case packet := <-ch:
-		// check if handler still exists before deleting
 		c.jobHandlersMutex.Lock()
 		delete(c.jobHandlers, protocol.JobId(jobID))
 		c.jobHandlersMutex.Unlock()
 		return packet, nil
-	case <-time.After(time.Second * 10):
+	case <-timer.C:
 		c.jobHandlersMutex.Lock()
 		delete(c.jobHandlers, protocol.JobId(jobID))
 		c.jobHandlersMutex.Unlock()
@@ -352,9 +354,20 @@ func (c *Client) writeLoop() {
 
 func (c *Client) heartbeatLoop(seconds time.Duration) {
 	c.heartbeatMutex.Lock()
-	// stop previous heartbeat if it exists
 	if c.heartbeat != nil {
 		close(c.heartbeat)
+	}
+
+	// Check if the connection is still alive before creating a new heartbeat channel.
+	// Disconnect() may have run between when this goroutine was scheduled and now.
+	c.mutex.RLock()
+	connAlive := c.conn != nil
+	c.mutex.RUnlock()
+
+	if !connAlive {
+		c.heartbeat = nil
+		c.heartbeatMutex.Unlock()
+		return
 	}
 
 	c.heartbeat = make(chan struct{})
@@ -459,6 +472,7 @@ func (c *Client) handleMulti(packet *protocol.Packet) {
 			c.Errorf("handleMulti: Error while decompressing: %v", err)
 			return
 		}
+		defer r.Close()
 
 		payload, err = io.ReadAll(r)
 		if err != nil {
