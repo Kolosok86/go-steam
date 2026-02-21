@@ -4,6 +4,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -50,29 +51,22 @@ func dialTCP(laddr, raddr *net.TCPAddr, proxy proxy.Dialer) (*tcpConnection, err
 }
 
 func (c *tcpConnection) Read() (*protocol.Packet, error) {
-	// All packets begin with a packet length
-	var packetLen uint32
-	err := binary.Read(c.conn, binary.LittleEndian, &packetLen)
-	if err != nil {
+	// Read length + magic in one syscall
+	var hdr [8]byte
+	if _, err := io.ReadFull(c.conn, hdr[:]); err != nil {
 		return nil, err
 	}
-
-	// A magic value follows for validation
-	var packetMagic uint32
-	err = binary.Read(c.conn, binary.LittleEndian, &packetMagic)
-	if err != nil {
-		return nil, err
-	}
+	packetLen := binary.LittleEndian.Uint32(hdr[0:4])
+	packetMagic := binary.LittleEndian.Uint32(hdr[4:8])
 	if packetMagic != tcpConnectionMagic {
 		return nil, fmt.Errorf("Invalid connection magic! Expected %d, got %d!", tcpConnectionMagic, packetMagic)
 	}
 
-	buf := make([]byte, packetLen, packetLen)
-	_, err = io.ReadFull(c.conn, buf)
-	if err == io.ErrUnexpectedEOF {
-		return nil, io.EOF
-	}
-	if err != nil {
+	buf := make([]byte, packetLen)
+	if _, err := io.ReadFull(c.conn, buf); err != nil {
+		if errors.Is(err, io.ErrUnexpectedEOF) {
+			return nil, io.EOF
+		}
 		return nil, err
 	}
 
@@ -94,16 +88,12 @@ func (c *tcpConnection) Write(message []byte) error {
 	}
 	c.cipherMutex.RUnlock()
 
-	err := binary.Write(c.conn, binary.LittleEndian, uint32(len(message)))
-	if err != nil {
-		return err
-	}
-	err = binary.Write(c.conn, binary.LittleEndian, tcpConnectionMagic)
-	if err != nil {
-		return err
-	}
-
-	_, err = c.conn.Write(message)
+	// Send header + body in a single writev syscall
+	var hdr [8]byte
+	binary.LittleEndian.PutUint32(hdr[0:4], uint32(len(message)))
+	binary.LittleEndian.PutUint32(hdr[4:8], tcpConnectionMagic)
+	bufs := net.Buffers{hdr[:], message}
+	_, err := bufs.WriteTo(c.conn)
 	return err
 }
 

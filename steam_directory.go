@@ -11,66 +11,77 @@ import (
 	"github.com/kolosok86/go-steam/netutil"
 )
 
-// Load initial server list from Steam Directory Web API.
-// Call InitializeSteamDirectory() before Connect() to use
-// steam directory server list instead of static one.
-func InitializeSteamDirectory() error {
-	return steamDirectoryCache.Initialize()
-}
+const (
+	steamDirectoryURL = "https://api.steampowered.com/ISteamDirectory/GetCMList/v1/?cellId=0"
+	httpTimeout       = 15 * time.Second
+)
 
-var steamDirectoryCache *steamDirectory = &steamDirectory{}
+var steamDirectoryCache = &steamDirectory{}
 
 type steamDirectory struct {
-	sync.RWMutex
-	servers       []string
-	isInitialized bool
+	mu      sync.RWMutex
+	servers []string
 }
 
-// Get server list from steam directory and save it for later
+type cmListResult struct {
+	ServerList []string `json:"serverlist"`
+	Result     uint32   `json:"result"`
+	Message    string   `json:"message"`
+}
+
+type cmResponse struct {
+	Response cmListResult `json:"response"`
+}
+
+// Initialize fetches the CM server list from the Steam Directory.
+// The HTTP request is performed without holding the lock to avoid
+// blocking concurrent reads for the duration of the request.
 func (sd *steamDirectory) Initialize() error {
-	sd.Lock()
-	defer sd.Unlock()
-	client := new(http.Client)
-	resp, err := client.Get("https://api.steampowered.com/ISteamDirectory/GetCMList/v1/?cellId=0")
+	servers, err := fetchCMServers()
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
-	r := struct {
-		Response struct {
-			ServerList []string
-			Result     uint32
-			Message    string
-		}
-	}{}
-	if err = json.NewDecoder(resp.Body).Decode(&r); err != nil {
-		return err
-	}
-	if r.Response.Result != 1 {
-		return fmt.Errorf("failed to get steam directory, result: %v, message: %v\n", r.Response.Result, r.Response.Message)
-	}
-	if len(r.Response.ServerList) == 0 {
-		return fmt.Errorf("steam returned zero servers for steam directory request\n")
-	}
-	sd.servers = r.Response.ServerList
-	sd.isInitialized = true
+
+	sd.mu.Lock()
+	sd.servers = servers
+	sd.mu.Unlock()
 	return nil
 }
 
-func (sd *steamDirectory) GetRandomCM() *netutil.PortAddr {
-	sd.RLock()
-	defer sd.RUnlock()
-	if !sd.isInitialized {
-		panic("steam directory is not initialized")
+func fetchCMServers() ([]string, error) {
+	client := &http.Client{Timeout: httpTimeout}
+	resp, err := client.Get(steamDirectoryURL)
+	if err != nil {
+		return nil, fmt.Errorf("steam directory: %w", err)
 	}
-	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
-	addr := netutil.ParsePortAddr(sd.servers[rng.Int31n(int32(len(sd.servers)))])
-	return addr
+	defer resp.Body.Close()
+
+	var r cmResponse
+	if err = json.NewDecoder(resp.Body).Decode(&r); err != nil {
+		return nil, fmt.Errorf("steam directory: decode response: %w", err)
+	}
+	if r.Response.Result != 1 {
+		return nil, fmt.Errorf("steam directory: result %d: %s", r.Response.Result, r.Response.Message)
+	}
+	if len(r.Response.ServerList) == 0 {
+		return nil, fmt.Errorf("steam directory: empty server list")
+	}
+	return r.Response.ServerList, nil
+}
+
+func (sd *steamDirectory) GetRandomCM() *netutil.PortAddr {
+	sd.mu.RLock()
+	servers := sd.servers
+	sd.mu.RUnlock()
+
+	if len(servers) == 0 {
+		return nil
+	}
+	return netutil.ParsePortAddr(servers[rand.Intn(len(servers))])
 }
 
 func (sd *steamDirectory) IsInitialized() bool {
-	sd.RLock()
-	defer sd.RUnlock()
-	isInitialized := sd.isInitialized
-	return isInitialized
+	sd.mu.RLock()
+	defer sd.mu.RUnlock()
+	return len(sd.servers) > 0
 }

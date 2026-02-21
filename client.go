@@ -179,13 +179,10 @@ func (c *Client) Connected() bool {
 func (c *Client) Connect() (*netutil.PortAddr, error) {
 	var server *netutil.PortAddr
 
-	// try to initialize the directory cache
 	if !steamDirectoryCache.IsInitialized() {
 		_ = steamDirectoryCache.Initialize()
 	}
-	if steamDirectoryCache.IsInitialized() {
-		server = steamDirectoryCache.GetRandomCM()
-	} else {
+	if server = steamDirectoryCache.GetRandomCM(); server == nil {
 		server = GetRandomCM()
 	}
 
@@ -279,7 +276,7 @@ func (c *Client) WriteUnified(service string, body proto.Message) (*protocol.Pac
 	ch := make(chan *protocol.Packet, 1)
 
 	c.jobHandlersMutex.Lock()
-	c.jobHandlers[protocol.JobId(jobID)] = ch
+	c.jobHandlers[jobID] = ch
 	c.jobHandlersMutex.Unlock()
 
 	c.Write(msg)
@@ -290,12 +287,12 @@ func (c *Client) WriteUnified(service string, body proto.Message) (*protocol.Pac
 	select {
 	case packet := <-ch:
 		c.jobHandlersMutex.Lock()
-		delete(c.jobHandlers, protocol.JobId(jobID))
+		delete(c.jobHandlers, jobID)
 		c.jobHandlersMutex.Unlock()
 		return packet, nil
 	case <-timer.C:
 		c.jobHandlersMutex.Lock()
-		delete(c.jobHandlers, protocol.JobId(jobID))
+		delete(c.jobHandlers, jobID)
 		c.jobHandlersMutex.Unlock()
 		return nil, fmt.Errorf("timeout: no response received within 10 seconds")
 	}
